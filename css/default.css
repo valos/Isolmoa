@@ -1,0 +1,23 @@
+/* http://www.onextrapixel.com/2013/04/08/25-free-pixel-perfect-fonts-for-8-bit-designs/ */
+@font-face {
+    font-family: 'Minecraftia';
+    src: url('../fonts/Minecraftia.ttf') format('truetype');
+}
+
+*, *:after, *:before { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+body, html { font-size: 100%; padding: 0; margin: 0;}
+
+/* Clearfix hack by Nicolas Gallagher: http://nicolasgallagher.com/micro-clearfix-hack/ */
+.clearfix:before, .clearfix:after { content: " "; display: table; }
+.clearfix:after { clear: both; }
+
+html, body { height: 100%; }
+
+body {
+    font-family: 'Minecraftia';
+    overflow: hidden;
+}
+
+a {
+    text-decoration: none;
+}
