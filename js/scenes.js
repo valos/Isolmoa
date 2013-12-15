@@ -39,32 +39,45 @@ Crafty.scene('Game', function() {
     }
 
     this.aiTurn = this.bind('AITurn', function() {
-        var scores, choices, best, square;
+        var scores, choices, best;
 
         switch(self.model.step) {
         case 'start':
-            var pos = self.model.board.getRandomSquare();
-            square = self.squares[pos.y][pos.x];
+            best = self.model.board.getRandomSquare();
             break;
         case 'move':
-            console.log('computer move', self.model.turn);
-            scores = self.model.getCellsScores(1, self.model.turn);
-            choices = self.model.getChoices(scores, self.model.turn);
-            best = self.model.getBestChoice(choices, 1);
-            console.log('best', best);
-            square = self.squares[best.y][best.x];
+            switch (Game.players[self.model.turn].level) {
+            case 'easy':
+                scores = self.model.getCellsScores(1, self.model.turn);
+                choices = self.model.getChoices(scores, self.model.turn);
+                best = self.model.getBestChoice(choices, 1);
+                break;
+            case 'medium':
+            case 'hard':
+                scores = self.model.getCellsScores(3, self.model.turn);
+                choices = self.model.getChoices(scores, self.model.turn);
+                best = self.model.getBestChoice(choices, 0);
+                break;
+            }
             break;
         case 'remove':
-            console.log('computer remove', self.model.turn^1);
-            scores = self.model.getCellsScores(1, self.model.turn^1);
-            choices = self.model.getChoices(scores, self.model.turn^1);
-            best = self.model.getBestChoice(choices, 1);
-            console.log('best', best);
-            square = self.squares[best.y][best.x];
+            switch (Game.players[self.model.turn].level) {
+            case 'easy':
+                scores = self.model.getCellsScores(1, self.model.turn^1);
+                choices = self.model.getChoices(scores, self.model.turn^1);
+                best = self.model.getBestChoice(choices, 1);
+                break;
+            case 'medium':
+            case 'hard':
+                scores = self.model.getCellsScores(3, self.model.turn^1);
+                choices = self.model.getChoices(scores, self.model.turn^1);
+                best = self.model.getBestChoice(choices, 0);
+                break;
+            }
             break;
         }
-        if (square) {
-            self.trigger('SquareSelected', {square: square, source: 'ai'});
+        if (best) {
+            self.trigger('SquareSelected', {square: self.squares[best.y][best.x], source: 'ai'});
         }
     });
 
