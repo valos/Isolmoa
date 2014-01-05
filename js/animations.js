@@ -12,7 +12,7 @@ window.addEventListener('load', function() {
     var animEndEventName = animEndEventNames[ Modernizr.prefixed('animation') ];
     // support css animations
     var support = Modernizr.cssanimations;
-    var anim = 27;
+    var anim = 37;
     var current = 'board';
     
     $('.pt-page').each(function() {
@@ -196,13 +196,13 @@ window.addEventListener('load', function() {
             inClass = 'pt-page-moveFromLeft';
             break;
         case 40:
-            outClass = 'pt-page-rotatePushTop';
-            inClass = 'pt-page-moveFromBottom';
-            break;
+            //outClass = 'pt-page-rotatePushTop';
+            //inClass = 'pt-page-moveFromBottom';
+            //break;
         case 41:
-            outClass = 'pt-page-rotatePushBottom';
-            inClass = 'pt-page-moveFromTop';
-            break;
+            //outClass = 'pt-page-rotatePushBottom';
+            //inClass = 'pt-page-moveFromTop';
+            //break;
         case 42:
             outClass = 'pt-page-rotatePushLeft'; // cool
             inClass = 'pt-page-rotatePullRight pt-page-delay180';

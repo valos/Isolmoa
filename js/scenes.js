@@ -10,8 +10,49 @@ Crafty.scene('Game', function() {
         drawBoard();
         self.model.newGame(Game.board.rows, Game.board.cols);
 
+        // init with a debug state
+/*
+        self.model.board[0] = [1,1,1,1,1,1];
+        self.model.board[1] = [1,1,1,0,1,1];
+        self.model.board[2] = [0,0,0,0,0,1];
+        self.model.board[3] = [1,1,0,1,0,0];
+        self.model.board[4] = [2,1,0,2,0,1];
+        self.model.board[5] = [1,0,0,1,1,1];
+        for (y = 0; y < Game.board.rows; y++) {
+            for (x = 0; x < Game.board.cols; x++) {
+                if (self.model.board[y][x] === 0)
+                    self.squares[y][x].remove();
+            }
+        }
+        self.pieces.push(Crafty.e('Piece').piece(0, false).at(0, 4));
+        self.pieces.push(Crafty.e('Piece').piece(1, false).at(3, 4));
+        self.model.pieces = [{x:0, y:4}, {x:3, y:4}];
+*/
+/*
+        self.model.board[0] = [1,1,1,1,1,1];
+        self.model.board[1] = [1,1,1,1,1,1];
+        self.model.board[2] = [2,1,1,1,1,1];
+        self.model.board[3] = [1,1,1,1,2,1];
+        self.model.board[4] = [1,1,1,1,1,1];
+        self.model.board[5] = [1,1,1,1,1,1];
+        for (y = 0; y < Game.board.rows; y++) {
+            for (x = 0; x < Game.board.cols; x++) {
+                if (self.model.board[y][x] === 0)
+                    self.squares[y][x].remove();
+            }
+        }
+        self.pieces.push(Crafty.e('Piece').piece(0, false).at(0, 2));
+        self.pieces.push(Crafty.e('Piece').piece(1, false).at(4, 3));
+        self.model.pieces = [{x:0, y:2}, {x:4, y:3}];
+
+        self.model.turn = 0;
+        self.model.step = 'move';
+        self.pieces[1].startPulse();
+*/
+        // end init
+
         if (Game.players[self.model.turn].type === 'ai') {
-            self.trigger('AITurn');
+            aiTurn();
         }
     }
 
@@ -38,7 +79,7 @@ Crafty.scene('Game', function() {
         }
     }
 
-    this.aiTurn = this.bind('AITurn', function() {
+    function aiTurn() {
         var scores, choices, best;
 
         switch(self.model.step) {
@@ -49,14 +90,16 @@ Crafty.scene('Game', function() {
             switch (Game.players[self.model.turn].level) {
             case 'easy':
                 scores = self.model.getCellsScores(1, self.model.turn);
-                choices = self.model.getChoices(scores, self.model.turn);
+                choices = self.model.getScoredChoices(scores, self.model.turn);
                 best = self.model.getBestChoice(choices, 1);
                 break;
             case 'medium':
-            case 'hard':
                 scores = self.model.getCellsScores(3, self.model.turn);
-                choices = self.model.getChoices(scores, self.model.turn);
+                choices = self.model.getScoredChoices(scores, self.model.turn);
                 best = self.model.getBestChoice(choices, 0);
+                break;
+            case 'hard':
+                best = self.model.alphabeta(3, -1000000, 1000000)[0];
                 break;
             }
             break;
@@ -64,22 +107,29 @@ Crafty.scene('Game', function() {
             switch (Game.players[self.model.turn].level) {
             case 'easy':
                 scores = self.model.getCellsScores(1, self.model.turn^1);
-                choices = self.model.getChoices(scores, self.model.turn^1);
+                choices = self.model.getScoredChoices(scores, self.model.turn^1);
                 best = self.model.getBestChoice(choices, 1);
                 break;
             case 'medium':
-            case 'hard':
                 scores = self.model.getCellsScores(3, self.model.turn^1);
-                choices = self.model.getChoices(scores, self.model.turn^1);
+                choices = self.model.getScoredChoices(scores, self.model.turn^1);
                 best = self.model.getBestChoice(choices, 0);
                 break;
+            case 'hard':
+                self.model.turn ^= 1;
+                best = self.model.alphabeta(3, -1000000, 1000000)[0];
+                self.model.turn ^= 1;
+                break;
+            }
+            if (!_.isObject(best)) {
+                best = self.model.getRandomSquare(self.model.turn);
+                console.log('NO BEST remove found, get a random square instead', best);
             }
             break;
         }
-        if (best) {
-            self.trigger('SquareSelected', {square: self.squares[best.y][best.x], source: 'ai'});
-        }
-    });
+
+        self.trigger('SquareSelected', {square: self.squares[best.y][best.x], source: 'ai'});
+    }
 
     this.squareSelected = this.bind('SquareSelected', function(data) {
         var turn = self.model.turn;
@@ -87,7 +137,6 @@ Crafty.scene('Game', function() {
         var source = data.source;
         var squareAt = square.at();
 
-        console.log(squareAt);
         if (Game.players[turn].type === 'ai' && source == 'human') {
             return;
         }
@@ -97,7 +146,6 @@ Crafty.scene('Game', function() {
             // create player piece
             var rotated = Game.players[0].type === 'human' && Game.players[1].type === 'human' && turn === 1 ? true : false;
             if (self.model.placePiece(squareAt.x, squareAt.y)) {
-                console.log('new piece', turn, squareAt.x, squareAt.y);
                 self.pieces.push(Crafty.e('Piece').piece(turn, rotated).at(squareAt.x, squareAt.y));
                 if (turn === 1) {
                     self.pieces[0].startPulse();
@@ -105,9 +153,7 @@ Crafty.scene('Game', function() {
             }
             break;
         case 'move':
-            console.log('move');
             if (self.model.movePiece(squareAt.x, squareAt.y)) {
-                console.log('move done');
                 self.pieces[turn].moveTo(square.x, square.y);
             }
             break;
@@ -117,11 +163,9 @@ Crafty.scene('Game', function() {
                 self.pieces[turn].stopPulse();
                 self.pieces[turn^1].startPulse();
             }
-            self.model.board.repr();
 
             _.each(self.pieces, function(piece, i) {
                 var nb = self.model.getPieceNbNeighbors(i);
-                console.log('piece nb: ' + i + ', neighbors: ' + nb);
                 if (nb === 0) {
                     self.model.step = 'end';
                     piece.loose();
@@ -131,10 +175,10 @@ Crafty.scene('Game', function() {
             break;
         }
 
-        if (Game.players[self.model.turn].type === 'ai') {
+        if (self.model.step !== 'end' && Game.players[self.model.turn].type === 'ai') {
             setTimeout(function() {
-                self.trigger('AITurn');
-            }, 2000);
+                aiTurn();
+            }, 500);
         }
     });
 

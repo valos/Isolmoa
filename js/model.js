@@ -15,6 +15,108 @@ Model.prototype.newGame = function(rows, cols, firstTurn) {
     this.board.init(rows, cols);
 };
 
+Model.prototype.alphabeta = function(depth, alpha, beta, turn) {
+    var best, x;
+    var evaluation, opponentEvaluation, evaluationSign;
+    var piece, spiece, opponentPiece;
+    var scores, choicesM, choicesR;
+    var doReturn;
+
+    if (typeof turn === 'undefined') {
+        turn = this.turn;
+    }
+
+    piece = this.pieces[this.turn];
+    opponentPiece = this.pieces[this.turn^1];
+    //evaluationSign = this.turn === turn ? 1 : -1;
+    evaluationSign = depth % 2 === 0 ? 1 : -1;
+    scores = this.getCellsScores(3, this.turn);
+
+    if (depth === 0) {
+        // return evaluation of piece
+        evaluation = scores[piece.y][piece.x];
+        if (evaluation === 0) {
+            return [null, evaluationSign * -1000000];
+        }
+        opponentEvaluation = this.getCellsScores(3, this.turn^1)[opponentPiece.y][opponentPiece.x];
+        if (opponentEvaluation === 0) {
+            return [null, evaluationSign * 1000000];
+        }
+        return [null, evaluationSign * (evaluation - opponentEvaluation)];
+    }
+
+    // get possible choices (moves)
+    choicesM = this.getScoredChoices(scores, this.turn);
+
+    if (choicesM.length === 0) {
+        // no more move: player looses
+        if (this.getPieceNbNeighbors(this.turn^1) === 0) {
+            //console.log('draw');
+            return [null, 0];
+        }
+        else {
+            //console.log('no more move', depth, this.turn);
+            //return [null, evaluationSign * -100000];
+            return [null, -100000];
+        }
+    }
+
+    // sort move choices in reversed order by score
+    _.sortBy(choicesM, function(c) {return c.score;});
+    choicesM.reverse();
+
+    doReturn = false;
+    best = [null, -1000000];
+    for (var i = 0; i < choicesM.length; i++) {
+        // do move
+        //console.log(depth, this.turn, 'i=' + i, 'TURN', this.turn === turn ? 'move player' : 'move opponent');
+        spiece = {x: piece.x, y: piece.y};
+        this.board.movePiece(piece.x, piece.y, choicesM[i].x, choicesM[i].y);
+        this.pieces[this.turn] = {x: choicesM[i].x, y: choicesM[i].y};
+
+        // get possible choices (removes)
+        scores = this.getCellsScores(3, this.turn^1);
+        choicesR = this.getScoredChoices(scores, this.turn^1);
+        _.sortBy(choicesR, function(c) {return c.score;});
+        choicesR.reverse();
+
+        this.turn ^= 1;
+        for (var j = 0; j < choicesR.length; j++) {
+            // do remove
+            //console.log(depth, this.turn^1, 'j=' + j, 'TURN', this.turn^1 === turn ? 'remove player' : 'remove opponent');
+            this.board.removeSquare(choicesR[j].x, choicesR[j].y);
+
+            x = this.alphabeta(depth - 1, -beta, -alpha, turn);
+            //this.board.repr();
+
+            // undo remove
+            this.board.restoreSquare(choicesR[j].x, choicesR[j].y);
+
+            if (-x[1] > best[1]) {
+                alpha = -x[1];
+                best = [choicesM[i], -x[1]];
+            }
+
+            if (alpha >= beta) {
+                // alpha pruning cut-off
+                doReturn = true;
+                break;
+            }
+        }
+        this.turn ^= 1;
+
+        // undo move
+        this.board.movePiece(choicesM[i].x, choicesM[i].y, spiece.x, spiece.y);
+        this.pieces[this.turn] = {x: spiece.x, y: spiece.y};
+
+        if (doReturn) {
+            return best;
+        }
+    }
+
+    return best;
+};
+
 Model.prototype.getBestChoice = function(choices, turn, degrade) {
     var max = [];
     _.each(choices, function(choice) {
@@ -37,10 +139,6 @@ Model.prototype.getBestChoice = function(choices, turn, degrade) {
     }
 
     return null;
-};
-
-Model.prototype.getCell = function(x, y) {
-    return this.board.getCell(x, y);
 };
 
 Model.prototype.getCellsScores = function(depth, turn, prevScores) {
@@ -86,7 +184,12 @@ Model.prototype.getCellsScores = function(depth, turn, prevScores) {
     return scores;
 };
 
-Model.prototype.getChoices = function(scores, turn) {
+Model.prototype.getChoices = function(turn) {
+    var piece = this.pieces[turn];
+    return this.board.getCellNeighbors(piece.x, piece.y);
+};
+
+Model.prototype.getScoredChoices = function(scores, turn) {
     var nx, ny, choices = [];
     var piece = this.pieces[turn];
     var opponentPiece = this.pieces[turn^1];
@@ -114,9 +217,41 @@ Model.prototype.getChoices = function(scores, turn) {
     return choices;
 };
 
-Model.prototype.getPieceNbNeighbors = function(num) {
-    piece = this.pieces[num];
-    return this.board.getCellNbNeighbors(piece.x, piece.y);
+Model.prototype.getPieceNbNeighbors = function(turn) {
+    var piece = this.pieces[turn];
+    return this.board.getCellNeighbors(piece.x, piece.y).length;
+};
+
+Model.prototype.getRandomSquare = function (turn, excludePlayerNeighboringCells) {
+    var excludes, choices = [];
+
+    if (excludePlayerNeighboringCells) {
+        excludes = this.getChoices(turn);
+    }
+
+    for (var y = 0; y < this.board.rows; y++) {
+        for (var x = 0; x < this.board.cols; x++) {
+            var notfound = true;
+            if (excludes) {
+                for (var i = 0; i < excludes.length; i++) {
+                    if (excludes[i].x === x && excludes[i].y === y) {
+                        notfound = false;
+                        break;
+                    }
+                }
+            }
+            if (notfound) {
+                choices.push({x: x, y: y});
+            }
+        }
+    }
+
+    if (choices.length) {
+        var rnd = Math.floor(Math.random() * choices.length);
+        return choices[rnd];
+    }
+
+    return null;
 };
 
 Model.prototype.movePiece = function(x, y) {

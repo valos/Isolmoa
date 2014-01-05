@@ -47,7 +47,7 @@ Game = {
         });
 
         // Start crafty
-        Crafty.init(window.innerWidth, window.innerHeight - 40, 'board');
+        Crafty.init(window.innerWidth, window.innerHeight - 39, 'board');
         //Crafty.init(size, size, 'board');
         //Crafty.viewport.init(size, size);
         //Crafty.canvas.init();
