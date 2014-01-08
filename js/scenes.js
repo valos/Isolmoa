@@ -5,6 +5,7 @@ Crafty.scene('Game', function() {
     this.squares = null;
 
     function newGame() {
+        audioplay("new_game");
         Game.readOptions();
 
         drawBoard();
@@ -78,7 +79,7 @@ Crafty.scene('Game', function() {
             }
         }
     }
-
+    
     function aiTurn() {
         var scores, choices, best;
 
@@ -131,6 +132,15 @@ Crafty.scene('Game', function() {
         self.trigger('SquareSelected', {square: self.squares[best.y][best.x], source: 'ai'});
     }
 
+    function audioplay(name) {
+        if (typeof Android !== 'undefined') {
+            Android.audioplay('sfx/' + name + '.mp3');
+        }
+        else {
+            Crafty.audio.play(name);
+        }
+    }
+
     this.squareSelected = this.bind('SquareSelected', function(data) {
         var turn = self.model.turn;
         var square = data.square;
@@ -154,11 +164,13 @@ Crafty.scene('Game', function() {
             break;
         case 'move':
             if (self.model.movePiece(squareAt.x, squareAt.y)) {
+                audioplay("move");
                 self.pieces[turn].moveTo(square.x, square.y);
             }
             break;
         case 'remove':
             if (self.model.removeSquare(squareAt.x, squareAt.y)) {
+                audioplay("remove");
                 square.remove();
                 self.pieces[turn].stopPulse();
                 self.pieces[turn^1].startPulse();
@@ -167,6 +179,7 @@ Crafty.scene('Game', function() {
             _.each(self.pieces, function(piece, i) {
                 var nb = self.model.getPieceNbNeighbors(i);
                 if (nb === 0) {
+                    audioplay('win');
                     self.model.step = 'end';
                     piece.loose();
                 }
@@ -188,6 +201,11 @@ Crafty.scene('Game', function() {
 
 
 Crafty.scene('Loading', function() {
+    Crafty.audio.add('new_game', ['sfx/new_game.mp3', 'sfx/new_game.ogg', 'sfx/new_game.wav']);
+    Crafty.audio.add('move', ['sfx/move.mp3', 'sfx/move.ogg', 'sfx/move.wav']);
+    Crafty.audio.add('remove', ['sfx/remove.mp3', 'sfx/remove.ogg', 'sfx/remove.wav']);
+    Crafty.audio.add('win', ['sfx/win.mp3', 'sfx/win.ogg', 'sfx/win.wav']);
+
     // Draw some text for the player to see in case the file
     // takes a noticeable amount of time to load
     Crafty.e('2D, DOM, Text')
