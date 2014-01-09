@@ -133,6 +133,9 @@ Crafty.scene('Game', function() {
     }
 
     function audioplay(name) {
+        if (Game.sound === false) {
+            return;
+        }
         if (typeof Android !== 'undefined') {
             Android.audioplay('sfx/' + name + '.mp3');
         }

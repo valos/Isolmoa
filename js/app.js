@@ -29,6 +29,9 @@ Game = {
             level: option[1]
         });
 
+        option = $('input[name=sound-fx]:checked').val();
+        this.sound = option === 'on' ? true : false;
+
         // compute cells size
         this.board.cellSize = this.board.size / Math.max(this.board.rows, this.board.cols);
     },
@@ -39,34 +42,30 @@ Game = {
 
         $('#form-options').sisyphus({
             onSave: function () {
-                console.log('options save');
+                Game.readOptions();
+                //console.log('options save');
             },
             onRestore: function () {
+                Game.readOptions();
                 console.log('options restore');
             }
         });
 
         // Start crafty
-        Crafty.init(window.innerWidth, window.innerHeight - 39, 'board');
-        //Crafty.init(size, size, 'board');
-        //Crafty.viewport.init(size, size);
-        //Crafty.canvas.init();
-        //Crafty.background('rgb(64, 64, 64)');
-        
-        // remove CSS styles applied by Crafty
-        //$('#board').attr('style', '');
-        //$('#board canvas').attr('style', '');
+        Crafty.init(window.innerWidth, window.innerHeight, 'board');
 
         function detectOrientation() {
             if (window.orientation === 0 || window.innerWidth < window.innerHeight) {
                 // portrait
-                //document.getElementsByTagName('footer')[0].style.display = 'block';
+                $('footer').show();
+                $('header').show();
                 Crafty.viewport.x = 0;
                 Crafty.viewport.y = (window.innerHeight - Game.board.size) / 2;
             }
             else {
                 // landscape
-                //document.getElementsByTagName('footer')[0].style.display = 'none';
+                $('footer').hide();
+                $('header').hide();
                 Crafty.viewport.x = (window.innerWidth - Game.board.size) / 2;
                 Crafty.viewport.y = 0;
             }
@@ -91,7 +90,6 @@ Game = {
         }
         $('.switch-toggle label').on('click', forceReflow);
 
-        //new IScroll('#rules');
         new iScroll('rules');
         
         Crafty.scene('Loading');
