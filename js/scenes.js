@@ -3,6 +3,7 @@ Crafty.scene('Game', function() {
     this.model = new Model();
     this.pieces = null;
     this.squares = null;
+    this.messages = [$('#message-0'), $('#message-1')];
 
     function newGame() {
         audioplay("new_game");
@@ -10,6 +11,7 @@ Crafty.scene('Game', function() {
 
         drawBoard();
         self.model.newGame(Game.board.rows, Game.board.cols);
+        displayMessage();
 
         // init with a debug state
 /*
@@ -144,6 +146,112 @@ Crafty.scene('Game', function() {
         }
     }
 
+    function displayMessage() {
+        var y, effect, msgs = [];
+
+        if (Game.players[0].type === 'ai' && Game.players[1].type === 'ai') {
+            return;
+        }
+        else if (Game.players[0].type === 'human' && Game.players[1].type === 'human') {
+            // Human vs Human (2 distinct messages)
+            msgs = ['...', '...'];
+        }
+        else {
+            // Human vs AI (1 common message)
+            msgs[0] = Game.players[self.model.turn].type === 'human' ? 'You' : 'AI';
+        }
+
+        switch (self.model.step) {
+        case 'start':
+            effect = self.model.turn ? 'bounceInLeft' : 'bounceInRight';
+            if (msgs.length === 2) {
+                msgs[self.model.turn] = 'Choose a cell';
+            }
+            else {
+                msgs[0] += ' : Choose a cell';
+            }
+            break;
+        case 'move':
+            effect = 'bounce';
+            if (msgs.length === 2) {
+                msgs[self.model.turn] = 'Move';
+            }
+            else {
+                msgs[0] += ' : Move';
+            }
+            break;
+        case 'remove':
+            effect = 'pulse';
+            if (msgs.length === 2) {
+                msgs[self.model.turn] = 'Destroy a square';
+            }
+            else {
+                msgs[0] += ' : Destroy a square';
+            }
+            break;
+        case 'end':
+            effect = 'bounce';
+            if (self.model.getPieceNbNeighbors(0) === 0 && self.model.getPieceNbNeighbors(1) === 0) {
+                if (msgs.length === 2) {
+                    msgs[0] = msgs[1] = 'No winner: draw';
+                }
+                else {
+                    msgs[0] = 'No winner: draw';
+                }
+            }
+            else if (self.model.getPieceNbNeighbors(1) === 0) {
+                if (msgs.length === 2) {
+                    msgs[0] = 'You wins';
+                    msgs[1] = 'You loses';
+                }
+                else {
+                    msgs[0] = Game.players[0].type === 'ai' ? 'You' : 'AI';
+                    msgs[0] += ' wins';
+                }
+            }
+            else {
+                if (msgs.length === 2) {
+                    msgs[0] = 'You loses';
+                    msgs[1] = 'You wins';
+                }
+                else {
+                    msgs[0] = Game.players[1].type === 'human' ? 'You' : 'AI';
+                    msgs[0] += ' wins';
+                }
+            }
+            break;
+        }
+
+        y = (window.innerHeight - Game.board.size) / 4;
+        if (msgs.length === 2) {
+            $.each(self.messages, function(i, $message) {
+                $message.css(i === 0 ? 'top' : 'bottom', y + 'px');
+                $message.children(':first')
+                    .css('color', '#fff')
+                    .text(msgs[i]);
+                if (self.model.turn === i) {
+                    $message.children(':first')
+                        .addClass(effect + ' animated')
+                        .one('webkitAnimationEnd animationend', function() {
+                            $(this).removeClass();
+                        });
+                }
+            });
+        }
+        else {
+            self.messages[0]
+                .css('top', y + 'px');
+            self.messages[0].children(':first')
+                .css('color', '#fff')
+                .text(msgs[0])
+                .addClass(effect + ' animated')
+                .one('webkitAnimationEnd animationend', function() {
+                    $(this).removeClass();
+		});
+            self.messages[1].children(':first').text('');
+        }
+    }
+    
     this.squareSelected = this.bind('SquareSelected', function(data) {
         var turn = self.model.turn;
         var square = data.square;
@@ -191,10 +299,12 @@ Crafty.scene('Game', function() {
             break;
         }
 
+        displayMessage();
+
         if (self.model.step !== 'end' && Game.players[self.model.turn].type === 'ai') {
             setTimeout(function() {
                 aiTurn();
-            }, 500);
+            }, 2000);
         }
     });
 

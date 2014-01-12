@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Isolmoa</title>
     <meta name="author" content="Valéry Febvre">
-    <meta name="copyright" content="&copy; 2013 Valéry Febvre">
+    <meta name="copyright" content="&copy; 2013-2014 Valéry Febvre">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
@@ -13,7 +13,8 @@
 
     <link rel="stylesheet" href="css/default.css">
     <link rel="stylesheet" href="css/component.css">
-    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/animate-page.css">
+    <link rel="stylesheet" href="lib/animate.css">
 
     <link rel="stylesheet" href="lib/toggle-switch.css">
     <script src="lib/modernizr.custom.js"></script>
@@ -28,7 +29,10 @@
     
     <div id="pt-main" class="pt-perspective">
 
-      <div class="pt-page pt-page-current" id="board"></div>
+      <div class="pt-page pt-page-current" id="board">
+        <div id="message-0"><div></div></div>
+        <div id="message-1"><div></div></div>
+      </div>
 
       <div class="pt-page" id="rules"><div class="scroller">
         <h3>How to play</h3>
@@ -163,7 +167,7 @@
     <script src="lib/underscore-min.js"></script>
     <script src="lib/crafty-min.js"></script>
 
-    <script src="js/animations.js"></script>
+    <script src="js/animate-page.js"></script>
     <script src="js/board.js"></script>
     <script src="js/components.js"></script>
     <script src="js/model.js"></script>

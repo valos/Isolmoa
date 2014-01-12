@@ -4,6 +4,15 @@
     src: url('../fonts/Minecraftia.ttf') format('truetype');
 }
 
+/*
+@font-face {
+  font-family: 'Electrolize';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Electrolize'), local('Electrolize-Regular'), url(http://themes.googleusercontent.com/static/fonts/electrolize/v2/DDy9sgU2U7S4xAwH5thnJ4bN6UDyHWBl620a-IRfuBk.woff) format('woff');
+}
+*/
+
 *, *:after, *:before { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
 body, html { font-size: 100%; padding: 0; margin: 0;}
 
@@ -15,6 +24,7 @@ html, body { height: 100%; }
 
 body {
     font-family: 'Minecraftia';
+    /*font-family: 'Electrolize';*/
     overflow: hidden;
 }
 
