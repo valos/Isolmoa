@@ -205,7 +205,7 @@ Crafty.scene('Game', function() {
                     msgs[1] = 'You loses';
                 }
                 else {
-                    msgs[0] = Game.players[0].type === 'ai' ? 'You' : 'AI';
+                    msgs[0] = Game.players[0].type === 'human' ? 'You' : 'AI';
                     msgs[0] += ' wins';
                 }
             }
