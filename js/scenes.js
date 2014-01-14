@@ -11,7 +11,7 @@ Crafty.scene('Game', function() {
 
         drawBoard();
         self.model.newGame(Game.board.rows, Game.board.cols);
-        displayMessage();
+        displayPlayerInstruction();
 
         // init with a debug state
 /*
@@ -77,7 +77,7 @@ Crafty.scene('Game', function() {
         for (y = 0; y < Game.board.rows; y++) {
             self.squares[y] = new Array(Game.board.cols);
             for (x = 0; x < Game.board.cols; x++) {
-                self.squares[y][x] = Crafty.e('Square').at(x, y);
+                self.squares[y][x] = Crafty.e('Square').at(x, y).bind("TweenEnd", displayPlayerInstruction);
             }
         }
     }
@@ -146,7 +146,7 @@ Crafty.scene('Game', function() {
         }
     }
 
-    function displayMessage() {
+    function displayPlayerInstruction() {
         var y, effect, msgs = [];
 
         if (Game.players[0].type === 'ai' && Game.players[1].type === 'ai') {
@@ -254,6 +254,7 @@ Crafty.scene('Game', function() {
     
     this.squareSelected = this.bind('SquareSelected', function(data) {
         var turn = self.model.turn;
+        var piece;
         var square = data.square;
         var source = data.source;
         var squareAt = square.at();
@@ -267,10 +268,12 @@ Crafty.scene('Game', function() {
             // create player piece
             var rotated = Game.players[0].type === 'human' && Game.players[1].type === 'human' && turn === 1 ? true : false;
             if (self.model.placePiece(squareAt.x, squareAt.y)) {
-                self.pieces.push(Crafty.e('Piece').piece(turn, rotated).at(squareAt.x, squareAt.y));
+                piece = Crafty.e('Piece').piece(turn, rotated).at(squareAt.x, squareAt.y).bind("TweenEnd", displayPlayerInstruction);
+                self.pieces.push(piece);
                 if (turn === 1) {
                     self.pieces[0].startPulse();
                 }
+                displayPlayerInstruction();
             }
             break;
         case 'move':
@@ -298,8 +301,6 @@ Crafty.scene('Game', function() {
 
             break;
         }
-
-        displayMessage();
 
         if (self.model.step !== 'end' && Game.players[self.model.turn].type === 'ai') {
             setTimeout(function() {
