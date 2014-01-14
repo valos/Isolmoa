@@ -9,6 +9,7 @@ Game = {
     // players type (human or ai) and level if ai
     players: null,
     sound: false,
+    startPlayer: false,
 
     readOptions: function() {
         var option;
@@ -31,6 +32,9 @@ Game = {
 
         option = $('input[name=sound-fx]:checked').val();
         this.sound = option === 'on' ? true : false;
+
+        option = $('input[name=start-player]:checked').val();
+        this.startPlayer = option !== 'random' ? parseInt(option) : Math.floor(Math.random() * 2);
 
         // compute cells size
         this.board.cellSize = this.board.size / Math.max(this.board.rows, this.board.cols);

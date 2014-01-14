@@ -5,13 +5,11 @@ function Model() {
     // step in a turn: start, move, remove, end
     this.step = null;
     this.pieces = [];
-    this.isGameOver = null; // ???
 }
 
-Model.prototype.newGame = function(rows, cols, firstTurn) {
-    this.turn = firstTurn !== undefined ? firstTurn : 0;
+Model.prototype.newGame = function(rows, cols) {
+    this.turn = 0;
     this.step = 'start';
-    this.isGameOver = false;
     this.board.init(rows, cols);
 };
 

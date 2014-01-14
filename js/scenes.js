@@ -126,7 +126,7 @@ Crafty.scene('Game', function() {
             }
             if (!_.isObject(best)) {
                 best = self.model.getRandomSquare(self.model.turn);
-                console.log('NO BEST remove found, get a random square instead', best);
+                //console.log('NO BEST remove found, get a random square instead', best);
             }
             break;
         }
@@ -268,7 +268,10 @@ Crafty.scene('Game', function() {
             // create player piece
             var rotated = Game.players[0].type === 'human' && Game.players[1].type === 'human' && turn === 1 ? true : false;
             if (self.model.placePiece(squareAt.x, squareAt.y)) {
-                piece = Crafty.e('Piece').piece(turn, rotated).at(squareAt.x, squareAt.y).bind("TweenEnd", displayPlayerInstruction);
+                piece = Crafty.e('Piece')
+                    .piece(Game.startPlayer === 0 ? turn : turn^1, rotated)
+                    .at(squareAt.x, squareAt.y)
+                    .bind("TweenEnd", displayPlayerInstruction);
                 self.pieces.push(piece);
                 if (turn === 1) {
                     self.pieces[0].startPulse();
