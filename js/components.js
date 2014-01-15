@@ -50,13 +50,29 @@ Crafty.c('Hole', {
 
 Crafty.c('Square', {
     init: function() {
-        this.requires('Cell, squareSprite, Tween, Mouse')
-            ._setSize()
+        this.requires('Cell, squareSprite, Tween, Tweener, Mouse')
+            .attr({
+                w: 0,
+                h: 0
+            })
             .bind('Click', this._onclick);
     },
 
     _onclick: function(event) {
         Crafty.trigger('SquareSelected', {square: this, source: 'human'});
+    },
+
+    appearAt: function(x, y) {
+        this.attr({
+            x: x * Game.board.cellSize + Game.board.cellSize / 2,
+            y: y * Game.board.cellSize + Game.board.cellSize / 2
+        });
+        return this.addTween({
+            x: this.x - Game.board.cellSize / 2,
+            y: this.y - Game.board.cellSize / 2,
+            w: Game.board.cellSize,
+            h: Game.board.cellSize
+        }, 'easeOutBounce', 75);
     },
 
     remove: function() {

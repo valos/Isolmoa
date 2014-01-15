@@ -12,7 +12,7 @@ window.addEventListener('load', function() {
     var animEndEventName = animEndEventNames[ Modernizr.prefixed('animation') ];
     // support css animations
     var support = Modernizr.cssanimations;
-    var anim = 37;
+    var anim = 54;
     var current = 'board';
     
     $('.pt-page').each(function() {
@@ -37,7 +37,7 @@ window.addEventListener('load', function() {
         
         $nextPage.addClass('pt-page-current');
 
-        anim++;
+        //anim++;
         switch(anim) {
         case 1:
             outClass = 'pt-page-moveToLeft';
@@ -335,7 +335,6 @@ window.addEventListener('load', function() {
     });
 
     function onEndAnimation($outpage, $inpage) {
-        console.log('onEndAnimation');
         endCurrPage = false;
         endNextPage = false;
         resetPage($outpage, $inpage);

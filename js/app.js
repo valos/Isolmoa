@@ -47,16 +47,15 @@ Game = {
         $('#form-options').sisyphus({
             onSave: function () {
                 Game.readOptions();
-                //console.log('options save');
             },
             onRestore: function () {
                 Game.readOptions();
-                console.log('options restore');
             }
         });
 
         // Start crafty
         Crafty.init(window.innerWidth, window.innerHeight, 'board');
+        Crafty.background('#0072BC');
 
         function detectOrientation() {
             if (window.orientation === 0 || window.innerWidth < window.innerHeight) {

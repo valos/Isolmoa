@@ -77,7 +77,7 @@ Crafty.scene('Game', function() {
         for (y = 0; y < Game.board.rows; y++) {
             self.squares[y] = new Array(Game.board.cols);
             for (x = 0; x < Game.board.cols; x++) {
-                self.squares[y][x] = Crafty.e('Square').at(x, y).bind("TweenEnd", displayPlayerInstruction);
+                self.squares[y][x] = Crafty.e('Square').appearAt(x, y).bind("TweenEnd", displayPlayerInstruction);
             }
         }
     }
