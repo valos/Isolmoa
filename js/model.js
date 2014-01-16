@@ -269,6 +269,10 @@ Model.prototype.movePiece = function(x, y) {
 };
 
 Model.prototype.placePiece = function(x, y) {
+    if (x === 0 || y === 0 || x === this.board.cols - 1 || y === this.board.rows - 1) {
+        // don't allow to place a piece on edges
+        return false;
+    }
     if (this.board.getCell(x, y) !== SQUARE) {
         return false;
     }

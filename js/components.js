@@ -50,7 +50,7 @@ Crafty.c('Hole', {
 
 Crafty.c('Square', {
     init: function() {
-        this.requires('Cell, squareSprite, Tween, Tweener, Mouse')
+        this.requires('Cell, squareSprite, Tint, Tween, Tweener, Mouse')
             .attr({
                 w: 0,
                 h: 0
@@ -73,6 +73,10 @@ Crafty.c('Square', {
             w: Game.board.cellSize,
             h: Game.board.cellSize
         }, 'easeOutBounce', 75);
+    },
+
+    overshadow: function(flag) {
+        return this.tint('#000000', flag ? 0.33 : 0);
     },
 
     remove: function() {

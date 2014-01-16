@@ -78,6 +78,10 @@ Crafty.scene('Game', function() {
             self.squares[y] = new Array(Game.board.cols);
             for (x = 0; x < Game.board.cols; x++) {
                 self.squares[y][x] = Crafty.e('Square').appearAt(x, y).bind("TweenEnd", displayPlayerInstruction);
+                if (x === 0 || y === 0 || x === Game.board.cols - 1 || y === Game.board.rows - 1) {
+                    // edges are overshadowed to indicate that pieces can't be placed on edges
+                    self.squares[y][x].overshadow(true);
+                }
             }
         }
     }
@@ -265,7 +269,6 @@ Crafty.scene('Game', function() {
                                     
         switch(self.model.step) {
         case 'start':
-            // create player piece
             var rotated = Game.players[0].type === 'human' && Game.players[1].type === 'human' && turn === 1 ? true : false;
             if (self.model.placePiece(squareAt.x, squareAt.y)) {
                 piece = Crafty.e('Piece')
@@ -275,6 +278,14 @@ Crafty.scene('Game', function() {
                 self.pieces.push(piece);
                 if (turn === 1) {
                     self.pieces[0].startPulse();
+                    // 2 pieces are placed, remove edges overshadow
+                    for (y = 0; y < Game.board.rows; y++) {
+                        for (x = 0; x < Game.board.cols; x++) {
+                            if (x === 0 || y === 0 || x === Game.board.cols - 1 || y === Game.board.rows - 1) {
+                                self.squares[y][x].overshadow(false);
+                            }
+                        }
+                    }
                 }
                 displayPlayerInstruction();
             }
