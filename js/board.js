@@ -94,8 +94,9 @@ Board.prototype.getCellScore = function(x, y, ignoreX, ignoreY) {
 Board.prototype.getRandomSquare = function() {
     var choices = [];
 
-    for (var y = 0; y < this.rows; y++) {
-        for (var x = 0; x < this.cols; x++) {
+    // get all possible squares except squares on edges
+    for (var y = 1; y < this.rows - 1; y++) {
+        for (var x = 1; x < this.cols - 1; x++) {
             if (this[y][x] === SQUARE) {
                 choices.push({x: x, y: y});
             }

@@ -13,28 +13,34 @@ Game = {
 
     readOptions: function() {
         var option;
+
+        // board size
         option = $('input[name=board-size]:checked').val().split('x');
         this.board.rows = option[0];
         this.board.cols = option[1];
-        
-        option = $('input[name=player-type-1]:checked').val().split(':');
-        this.players = [];
-        this.players.push({
-            type: option[0],
-            level: option[1]
-        });
-        
-        option = $('input[name=player-type-2]:checked').val().split(':');
-        this.players.push({
-            type: option[0],
-            level: option[1]
-        });
 
+        // start player
+        option = $('input[name=start-player]:checked').val();
+        this.startPlayer = option !== 'random' ? parseInt(option, 10) : Math.floor(Math.random() * 2);
+
+        this.players = [null, null];
+        // player 1: human or ai (level easy, medium, hard)
+        option = $('input[name=player-type-1]:checked').val().split(':');
+        this.players[this.startPlayer] = {
+            type: option[0],
+            level: option[1]
+        };
+        
+        // player 2: human or ai (level easy, medium, hard)
+        option = $('input[name=player-type-2]:checked').val().split(':');
+        this.players[this.startPlayer^1] = {
+            type: option[0],
+            level: option[1]
+        };
+
+        // osund FX on/off
         option = $('input[name=sound-fx]:checked').val();
         this.sound = option === 'on' ? true : false;
-
-        option = $('input[name=start-player]:checked').val();
-        this.startPlayer = option !== 'random' ? parseInt(option) : Math.floor(Math.random() * 2);
 
         // compute cells size
         this.board.cellSize = this.board.size / Math.max(this.board.rows, this.board.cols);
