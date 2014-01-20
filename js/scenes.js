@@ -4,6 +4,7 @@ Crafty.scene('Game', function() {
     this.pieces = null;
     this.squares = null;
     this.messages = [$('#message-0'), $('#message-1')];
+    this.aiTurnTimeout = null;
 
     function newGame() {
         audioplay("new_game");
@@ -14,6 +15,29 @@ Crafty.scene('Game', function() {
         displayPlayerInstruction();
 
         // init with a debug state
+/*
+        setTimeout(function() {
+            self.model.board[0] = [1,0,2,0,2,1];
+            self.model.board[1] = [1,0,0,1,0,1];
+            self.model.board[2] = [0,0,0,0,0,0];
+            self.model.board[3] = [1,1,0,0,1,1];
+            self.model.board[4] = [1,0,0,0,1,1];
+            self.model.board[5] = [1,1,1,1,1,1];
+            for (y = 0; y < Game.board.rows; y++) {
+                for (x = 0; x < Game.board.cols; x++) {
+                    if (self.model.board[y][x] === 0)
+                        self.squares[y][x].remove();
+                }
+            }
+            self.pieces.push(Crafty.e('Piece').piece(0, false).at(2, 0));
+            self.pieces.push(Crafty.e('Piece').piece(1, false).at(4, 0));
+            self.model.pieces = [{x:2, y:0}, {x:4, y:0}];
+            
+            self.model.turn = 0;
+            self.model.step = 'move';
+            self.pieces[0].startPulse();
+        }, 2000);
+*/
 /*
         self.model.board[0] = [1,1,1,1,1,1];
         self.model.board[1] = [1,1,1,0,1,1];
@@ -106,7 +130,7 @@ Crafty.scene('Game', function() {
                 best = self.model.getBestChoice(choices, 0);
                 break;
             case 'hard':
-                best = self.model.alphabeta(3, -1000000, 1000000)[0];
+                best = self.model.alphabeta(2, -1000000, 1000000)[0];
                 break;
             }
             break;
@@ -124,7 +148,7 @@ Crafty.scene('Game', function() {
                 break;
             case 'hard':
                 self.model.turn ^= 1;
-                best = self.model.alphabeta(3, -1000000, 1000000)[0];
+                best = self.model.alphabeta(2, -1000000, 1000000)[0];
                 self.model.turn ^= 1;
                 break;
             }
@@ -317,7 +341,8 @@ Crafty.scene('Game', function() {
         }
 
         if (self.model.step !== 'end' && Game.players[self.model.turn].type === 'ai') {
-            setTimeout(function() {
+            clearTimeout(self.aiTurnTimeout);
+            self.aiTurnTimeout = setTimeout(function() {
                 aiTurn();
             }, 2000);
         }

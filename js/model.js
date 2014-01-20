@@ -64,10 +64,10 @@ Model.prototype.alphabeta = function(depth, alpha, beta, turn) {
     choicesM.reverse();
 
     doReturn = false;
-    best = [null, -1000000];
+    best = [choicesM[0], -1000000];
     for (var i = 0; i < choicesM.length; i++) {
         // do move
-        //console.log(depth, this.turn, 'i=' + i, 'TURN', this.turn === turn ? 'move player' : 'move opponent');
+        //console.log(depth, this.turn, 'i=' + i, 'TURN', this.turn === turn ? 'move player' : 'move opponent', choicesM[i].x, choicesM[i].y);
         spiece = {x: piece.x, y: piece.y};
         this.board.movePiece(piece.x, piece.y, choicesM[i].x, choicesM[i].y);
         this.pieces[this.turn] = {x: choicesM[i].x, y: choicesM[i].y};
@@ -81,7 +81,7 @@ Model.prototype.alphabeta = function(depth, alpha, beta, turn) {
         this.turn ^= 1;
         for (var j = 0; j < choicesR.length; j++) {
             // do remove
-            //console.log(depth, this.turn^1, 'j=' + j, 'TURN', this.turn^1 === turn ? 'remove player' : 'remove opponent');
+            //console.log(depth, this.turn^1, 'j=' + j, 'TURN', this.turn^1 === turn ? 'remove player' : 'remove opponent', choicesR[j].x, choicesR[j].y);
             this.board.removeSquare(choicesR[j].x, choicesR[j].y);
 
             x = this.alphabeta(depth - 1, -beta, -alpha, turn);
