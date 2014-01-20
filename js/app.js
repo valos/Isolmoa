@@ -6,10 +6,12 @@ Game = {
         cols: null,
         cellSize: null
     },
-    // players type (human or ai) and level if ai
+    // players type (human or ai) and level if AI
     players: null,
     sound: false,
     startPlayer: false,
+
+    animatePage: new AnimatePage(),
 
     readOptions: function() {
         var option;
@@ -56,6 +58,32 @@ Game = {
             },
             onRestore: function () {
                 Game.readOptions();
+            }
+        });
+
+        $('.btn-page').on('click', function(e) {
+            e.preventDefault();
+
+            var page = $(this).data('page');
+
+            if (page === 'board') {
+                $('#btn-new-game').show();
+            }
+            else {
+                $('#btn-new-game').hide();
+            }
+
+            if (Game.animatePage.current === 'board') {
+                Game.animatePage.animate(page, 54);
+            }
+            else if (Game.animatePage.current === 'rules' && page === 'options') {
+                Game.animatePage.animate(page, 54);
+            }
+            else if (Game.animatePage.current === 'rules' && page === 'board') {
+                Game.animatePage.animate(page, 55);
+            }
+            else if (Game.animatePage.current === 'options') {
+                Game.animatePage.animate(page, 55);
             }
         });
 
