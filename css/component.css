@@ -1,4 +1,4 @@
-.pt-perspective {
+.perspective {
     position: relative;
     width: 100%;
     height: 100%;
@@ -7,7 +7,7 @@
     perspective: 800px;
 }
 
-.pt-page {
+.page {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -24,24 +24,6 @@
     -webkit-transform-style: preserve-3d;
     -moz-transform-style: preserve-3d;
     transform-style: preserve-3d;
-}
-
-.pt-page-current,
-.no-js .pt-page {
-    visibility: visible;
-    z-index: 1;
-}
-
-.no-js .pt-triggers {
-    display: none;
-}
-
-.no-js body {
-    overflow: auto;
-}
-
-.pt-page-ontop {
-    z-index: 999;
 }
 
 .scroller {
@@ -180,13 +162,20 @@ footer ul#nav li a {
     position: absolute;
     width: 100%;
     z-index: 1000;
-    font-size: 20px;
+    font-size: 1.2em;
     text-align: center;
     font-weight: bold;
+    line-height: 0.2;
 }
 #message-1 {
-  -moz-transform: rotate(-180deg);
-  -webkit-transform: rotate(-180deg);
-  -o-transform: rotate(-180deg);
-  transform: rotate(-180deg);
+    -moz-transform: rotate(-180deg);
+    -webkit-transform: rotate(-180deg);
+    -o-transform: rotate(-180deg);
+    transform: rotate(-180deg);
+}
+.piece {
+    display: inline-block;
+    background-image: url(../img/sprite-pieces.png);
+    height: 53px;
+    width: 53px;
 }

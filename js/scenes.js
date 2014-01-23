@@ -175,7 +175,7 @@ Crafty.scene('Game', function() {
     }
 
     function displayPlayerInstruction() {
-        var y, effect, msgs = [];
+        var y, effect, id, msgs = [];
 
         if (Game.players[0].type === 'ai' && Game.players[1].type === 'ai') {
             return;
@@ -189,11 +189,12 @@ Crafty.scene('Game', function() {
             msgs[0] = Game.players[self.model.turn].type === 'human' ? 'You' : 'AI';
         }
 
+        id = Game.startPlayer === self.model.turn ? 0 : 1;
         switch (self.model.step) {
         case 'start':
             effect = self.model.turn ? 'bounceInLeft' : 'bounceInRight';
             if (msgs.length === 2) {
-                msgs[self.model.turn] = 'Choose a cell';
+                msgs[id] = 'Choose a cell';
             }
             else {
                 msgs[0] += ' : Choose a cell';
@@ -202,7 +203,7 @@ Crafty.scene('Game', function() {
         case 'move':
             effect = 'bounce';
             if (msgs.length === 2) {
-                msgs[self.model.turn] = 'Move';
+                msgs[id] = 'Move';
             }
             else {
                 msgs[0] += ' : Move';
@@ -211,7 +212,7 @@ Crafty.scene('Game', function() {
         case 'remove':
             effect = 'pulse';
             if (msgs.length === 2) {
-                msgs[self.model.turn] = 'Destroy a square';
+                msgs[id] = 'Destroy a square';
             }
             else {
                 msgs[0] += ' : Destroy a square';
@@ -250,15 +251,17 @@ Crafty.scene('Game', function() {
             break;
         }
 
-        y = (window.innerHeight - Game.board.size) / 4;
+        y = (window.innerHeight - Game.board.size) / 4 - 14;
         if (msgs.length === 2) {
             $.each(self.messages, function(i, $message) {
                 $message.css(i === 0 ? 'top' : 'bottom', y + 'px');
-                $message.children(':first')
+                $message.children(':last')
                     .css('color', '#fff')
                     .text(msgs[i]);
-                if (self.model.turn === i) {
-                    $message.children(':first')
+                $message.children(':first').show();
+                $message.children(':first').css('background-position', (i === 0 ? 0 : -106) + 'px 0');
+                if (i === id) {
+                    $message.children(':last')
                         .addClass(effect + ' animated')
                         .one('webkitAnimationEnd animationend', function() {
                             $(this).removeClass();
@@ -270,13 +273,16 @@ Crafty.scene('Game', function() {
             self.messages[0]
                 .css('top', y + 'px');
             self.messages[0].children(':first')
+                .css('background-position', (self.model.turn === Game.startPlayer ? 0 : -106) + 'px 0');
+            self.messages[0].children(':last')
                 .css('color', '#fff')
                 .text(msgs[0])
                 .addClass(effect + ' animated')
                 .one('webkitAnimationEnd animationend', function() {
                     $(this).removeClass();
-		});
-            self.messages[1].children(':first').text('');
+                });
+            self.messages[1].children(':first').hide();
+            self.messages[1].children(':last').text('');
         }
     }
     

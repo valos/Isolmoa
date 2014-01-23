@@ -108,8 +108,8 @@ Game = {
             }
         }
         detectOrientation();
-        window.addEventListener("orientationchange", detectOrientation, false);
-        window.addEventListener("resize", detectOrientation, false);
+        //window.addEventListener("orientationchange", detectOrientation, false);
+        //window.addEventListener("resize", detectOrientation, false);
 
         // on some Mobile Webkit browsers (Android, iOS, BB, WebOS, etc.), and others with Touch support
         // a force reflow is required

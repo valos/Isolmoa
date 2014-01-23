@@ -17,7 +17,7 @@ function AnimatePage() {
     this.support = Modernizr.cssanimations;
     this.current = 'board';
 
-    $('.pt-page').each(function() {
+    $('.page').each(function() {
         var $page = $(this);
         $page.data('originalClassList', $page.attr('class'));
     });
@@ -309,21 +309,26 @@ AnimatePage.prototype.animate = function(page, num) {
         break;
     }
 
-    $currPage.addClass(outClass).on(this.animEndEventName, function() {
-        $currPage.off(self.animEndEventName);
-        self.endCurrPage = true;
-        if (self.endNextPage) {
-            self.onEndAnimation($currPage, $nextPage);
-        }
-    });
+    if (!this.support) {
+        this.onEndAnimation($currPage, $nextPage);
+    }
+    else {
+        $currPage.addClass(outClass).on(this.animEndEventName, function() {
+            $currPage.off(self.animEndEventName);
+            self.endCurrPage = true;
+            if (self.endNextPage) {
+                self.onEndAnimation($currPage, $nextPage);
+            }
+        });
 
-    $nextPage.addClass(inClass).on(this.animEndEventName, function() {
-        $nextPage.off(self.animEndEventName);
-        self.endNextPage = true;
-        if (self.endCurrPage) {
-            self.onEndAnimation($currPage, $nextPage);
-        }
-    });
+        $nextPage.addClass(inClass).on(this.animEndEventName, function() {
+            $nextPage.off(self.animEndEventName);
+            self.endNextPage = true;
+            if (self.endCurrPage) {
+                self.onEndAnimation($currPage, $nextPage);
+            }
+        });
+    }
 };
 
 AnimatePage.prototype.onEndAnimation = function($outpage, $inpage) {
