@@ -40,7 +40,7 @@ Game = {
             level: option[1]
         };
 
-        // osund FX on/off
+        // sound FX on/off
         option = $('input[name=sound-fx]:checked').val();
         this.sound = option === 'on' ? true : false;
 
@@ -52,7 +52,8 @@ Game = {
     start: function() {
         Game.board.size = Math.min(window.innerHeight, window.innerWidth);
 
-        $('#form-options').sisyphus({
+        Game.readOptions();
+        $('#options form').sisyphus({
             onSave: function () {
                 Game.readOptions();
             },
