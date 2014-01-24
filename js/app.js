@@ -23,19 +23,19 @@ Game = {
 
         // start player
         option = $('input[name=start-player]:checked').val();
-        this.startPlayer = option !== 'random' ? parseInt(option, 10) : Math.floor(Math.random() * 2);
+        this.startPlayer = option !== 'random' ? parseInt(option, 10) : 'random';
 
         this.players = [null, null];
         // player 1: human or ai (level easy, medium, hard)
         option = $('input[name=player-type-1]:checked').val().split(':');
-        this.players[this.startPlayer] = {
+        this.players[0] = {
             type: option[0],
             level: option[1]
         };
         
         // player 2: human or ai (level easy, medium, hard)
         option = $('input[name=player-type-2]:checked').val().split(':');
-        this.players[this.startPlayer^1] = {
+        this.players[1] = {
             type: option[0],
             level: option[1]
         };
@@ -90,26 +90,8 @@ Game = {
         // Start crafty
         Crafty.init(window.innerWidth, window.innerHeight, 'board');
         Crafty.background('#0072BC');
-
-        function detectOrientation() {
-            if (window.orientation === 0 || window.innerWidth < window.innerHeight) {
-                // portrait
-                $('footer').show();
-                $('header').show();
-                Crafty.viewport.x = 0;
-                Crafty.viewport.y = (window.innerHeight - Game.board.size) / 2;
-            }
-            else {
-                // landscape
-                $('footer').hide();
-                $('header').hide();
-                Crafty.viewport.x = (window.innerWidth - Game.board.size) / 2;
-                Crafty.viewport.y = 0;
-            }
-        }
-        detectOrientation();
-        //window.addEventListener("orientationchange", detectOrientation, false);
-        //window.addEventListener("resize", detectOrientation, false);
+        Crafty.viewport.x = 0;
+        Crafty.viewport.y = (window.innerHeight - Game.board.size) / 2;
 
         // on some Mobile Webkit browsers (Android, iOS, BB, WebOS, etc.), and others with Touch support
         // a force reflow is required

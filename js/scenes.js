@@ -1,6 +1,8 @@
 Crafty.scene('Game', function() {
     var self = this;
     this.model = new Model();
+    this.startPlayer = null;
+    this.players = null;
     this.pieces = null;
     this.squares = null;
     this.messages = [$('#message-0'), $('#message-1')];
@@ -8,10 +10,14 @@ Crafty.scene('Game', function() {
 
     function newGame() {
         audioplay("new_game");
-        Game.readOptions();
 
         drawBoard();
         self.model.newGame(Game.board.rows, Game.board.cols);
+        self.startPlayer = Game.startPlayer !== 'random' ? Game.startPlayer : Math.floor(Math.random() * 2);
+        self.players = [
+            Game.players[self.startPlayer],
+            Game.players[self.startPlayer^1]
+        ];
         displayPlayerInstruction();
 
         // init with a debug state
@@ -78,7 +84,7 @@ Crafty.scene('Game', function() {
 */
         // end init
 
-        if (Game.players[self.model.turn].type === 'ai') {
+        if (self.players[self.model.turn].type === 'ai') {
             aiTurn();
         }
     }
@@ -118,7 +124,7 @@ Crafty.scene('Game', function() {
             best = self.model.board.getRandomSquare();
             break;
         case 'move':
-            switch (Game.players[self.model.turn].level) {
+            switch (self.players[self.model.turn].level) {
             case 'easy':
                 scores = self.model.getCellsScores(1, self.model.turn);
                 choices = self.model.getScoredChoices(scores, self.model.turn);
@@ -135,7 +141,7 @@ Crafty.scene('Game', function() {
             }
             break;
         case 'remove':
-            switch (Game.players[self.model.turn].level) {
+            switch (self.players[self.model.turn].level) {
             case 'easy':
                 scores = self.model.getCellsScores(1, self.model.turn^1);
                 choices = self.model.getScoredChoices(scores, self.model.turn^1);
@@ -177,19 +183,19 @@ Crafty.scene('Game', function() {
     function displayPlayerInstruction() {
         var y, effect, id, msgs = [];
 
-        if (Game.players[0].type === 'ai' && Game.players[1].type === 'ai') {
+        if (self.players[0].type === 'ai' && self.players[1].type === 'ai') {
             return;
         }
-        else if (Game.players[0].type === 'human' && Game.players[1].type === 'human') {
+        else if (self.players[0].type === 'human' && self.players[1].type === 'human') {
             // Human vs Human (2 distinct messages)
             msgs = ['...', '...'];
         }
         else {
-            // Human vs AI (1 common message)
-            msgs[0] = Game.players[self.model.turn].type === 'human' ? 'You' : 'AI';
+            // Human vs AI (one common message)
+            msgs[0] = self.players[self.model.turn].type === 'human' ? 'You' : 'AI';
         }
 
-        id = Game.startPlayer === self.model.turn ? 0 : 1;
+        id = self.startPlayer === self.model.turn ? 0 : 1;
         switch (self.model.step) {
         case 'start':
             effect = self.model.turn ? 'bounceInLeft' : 'bounceInRight';
@@ -234,7 +240,7 @@ Crafty.scene('Game', function() {
                     msgs[1] = 'You loses';
                 }
                 else {
-                    msgs[0] = Game.players[0].type === 'human' ? 'You' : 'AI';
+                    msgs[0] = self.players[0].type === 'human' ? 'You' : 'AI';
                     msgs[0] += ' wins';
                 }
             }
@@ -244,14 +250,14 @@ Crafty.scene('Game', function() {
                     msgs[1] = 'You wins';
                 }
                 else {
-                    msgs[0] = Game.players[1].type === 'human' ? 'You' : 'AI';
+                    msgs[0] = self.players[1].type === 'human' ? 'You' : 'AI';
                     msgs[0] += ' wins';
                 }
             }
             break;
         }
 
-        y = (window.innerHeight - Game.board.size) / 4 - 14;
+        y = (window.innerHeight - Game.board.size - $('header').height() - $('footer').height() - 3) / 4;
         if (msgs.length === 2) {
             $.each(self.messages, function(i, $message) {
                 $message.css(i === 0 ? 'top' : 'bottom', y + 'px');
@@ -273,7 +279,8 @@ Crafty.scene('Game', function() {
             self.messages[0]
                 .css('top', y + 'px');
             self.messages[0].children(':first')
-                .css('background-position', (self.model.turn === Game.startPlayer ? 0 : -106) + 'px 0');
+                .show()
+                .css('background-position', (self.model.turn === self.startPlayer ? 0 : -106) + 'px 0');
             self.messages[0].children(':last')
                 .css('color', '#fff')
                 .text(msgs[0])
@@ -293,16 +300,16 @@ Crafty.scene('Game', function() {
         var source = data.source;
         var squareAt = square.at();
 
-        if (Game.players[turn].type === 'ai' && source == 'human') {
+        if (self.players[turn].type === 'ai' && source == 'human') {
             return;
         }
                                     
         switch(self.model.step) {
         case 'start':
-            var rotated = Game.players[0].type === 'human' && Game.players[1].type === 'human' && turn === 1 ? true : false;
+            var rotated = self.players[0].type === 'human' && self.players[1].type === 'human' && turn === 1 ? true : false;
             if (self.model.placePiece(squareAt.x, squareAt.y)) {
                 piece = Crafty.e('Piece')
-                    .piece(Game.startPlayer === 0 ? turn : turn^1, rotated)
+                    .piece(self.startPlayer === 0 ? turn : turn^1, rotated)
                     .at(squareAt.x, squareAt.y)
                     .bind("TweenEnd", displayPlayerInstruction);
                 self.pieces.push(piece);
@@ -346,7 +353,7 @@ Crafty.scene('Game', function() {
             break;
         }
 
-        if (self.model.step !== 'end' && Game.players[self.model.turn].type === 'ai') {
+        if (self.model.step !== 'end' && self.players[self.model.turn].type === 'ai') {
             clearTimeout(self.aiTurnTimeout);
             self.aiTurnTimeout = setTimeout(function() {
                 aiTurn();
