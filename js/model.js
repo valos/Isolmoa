@@ -229,6 +229,9 @@ Model.prototype.getRandomSquare = function (turn, excludePlayerNeighboringCells)
 
     for (var y = 0; y < this.board.rows; y++) {
         for (var x = 0; x < this.board.cols; x++) {
+            if (this.board.getCell(x, y) !== SQUARE) {
+                continue;
+            }
             var notfound = true;
             if (excludes) {
                 for (var i = 0; i < excludes.length; i++) {

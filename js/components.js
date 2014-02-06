@@ -58,7 +58,7 @@ Crafty.c('Square', {
             .bind('Click', this._onclick);
     },
 
-    _onclick: function(event) {
+    _onclick: function() {
         Crafty.trigger('SquareSelected', {square: this, source: 'human'});
     },
 

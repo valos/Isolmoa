@@ -1,4 +1,4 @@
-Game = {
+var Game = {
     // board's grid size and the size of each of its cell
     board: {
         size: null,
@@ -10,6 +10,8 @@ Game = {
     players: null,
     sound: false,
     startPlayer: false,
+
+    gameover: null,
 
     animatePage: new AnimatePage(),
 
@@ -62,17 +64,20 @@ Game = {
             }
         });
 
+        FastClick.attach(document.body);
+
+        $('#btn-new-game').on('click', function(e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            Crafty.scene('Game');
+        });
+
         $('.btn-page').on('click', function(e) {
             e.preventDefault();
+            e.stopImmediatePropagation();
 
             var page = $(this).data('page');
-
-            if (page === 'board') {
-                $('#btn-new-game').show();
-            }
-            else {
-                $('#btn-new-game').hide();
-            }
 
             if (Game.animatePage.current === 'board') {
                 Game.animatePage.animate(page, 54);
@@ -86,11 +91,17 @@ Game = {
             else if (Game.animatePage.current === 'options') {
                 Game.animatePage.animate(page, 55);
             }
+
+            if (page === 'board') {
+                $('#btn-new-game').show();
+            }
+            else {
+                $('#btn-new-game').hide();
+            }
         });
 
         // Start crafty
         Crafty.init(window.innerWidth, window.innerHeight, 'board');
-        Crafty.background('#0072BC');
         Crafty.viewport.x = 0;
         Crafty.viewport.y = (window.innerHeight - Game.board.size) / 2;
 
@@ -111,10 +122,10 @@ Game = {
         $('.switch-toggle label').on('click', forceReflow);
 
         new iScroll('rules');
-        
+
         Crafty.scene('Loading');
     }
 };
 
-//document.addEventListener('DOMComponentsLoaded', Game.start);
+//document.addEventListener('DOMContentLoaded', Game.start, true);
 window.addEventListener('load', Game.start, false);

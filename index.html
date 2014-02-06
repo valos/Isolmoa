@@ -7,9 +7,14 @@
     <meta name="copyright" content="&copy; 2013-2014 Valéry Febvre">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <link rel="shortcut icon" sizes="196x196" href="img/shortcut-icon-196.png">
+    <link rel="shortcut icon" sizes="128x128" href="img/shortcut-icon-128.png">
+    <link rel="apple-touch-icon" sizes="128x128" href="img/shortcut-icon-128.png">
+    <link rel="apple-touch-icon-precomposed" sizes="128x128" href="img/shortcut-icon-128.png">
 
     <link rel="stylesheet" href="css/default.css">
     <link rel="stylesheet" href="css/component.css">
@@ -18,6 +23,7 @@
 
     <link rel="stylesheet" href="lib/toggle-switch.css">
     <script src="lib/modernizr.custom.js"></script>
+    <script src="lib/fastclick.js"></script>
     <script src="lib/iscroll-lite.js"></script>
   </head>
   <body>
@@ -172,9 +178,9 @@
 
     <footer>
       <ul id="nav">
-        <li><a href="#" class="btn-page" data-page="board">Board</a></li>
-        <li><a href="#" class="btn-page" data-page="rules">Rules</a></li>
-        <li><a href="#" class="btn-page" data-page="options">Options</a></li>
+        <li><span class="btn-page" data-page="board">Board</span></li>
+        <li><span class="btn-page" data-page="rules">Rules</span></li>
+        <li><span class="btn-page" data-page="options">Options</span></li>
       </ul>
     </footer>
     

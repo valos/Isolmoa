@@ -9,80 +9,19 @@ Crafty.scene('Game', function() {
     this.aiTurnTimeout = null;
 
     function newGame() {
+        Game.gameover = null;
         audioplay("new_game");
 
         drawBoard();
         self.model.newGame(Game.board.rows, Game.board.cols);
+
         self.startPlayer = Game.startPlayer !== 'random' ? Game.startPlayer : Math.floor(Math.random() * 2);
         self.players = [
             Game.players[self.startPlayer],
             Game.players[self.startPlayer^1]
         ];
+
         displayPlayerInstruction();
-
-        // init with a debug state
-/*
-        setTimeout(function() {
-            self.model.board[0] = [1,0,2,0,2,1];
-            self.model.board[1] = [1,0,0,1,0,1];
-            self.model.board[2] = [0,0,0,0,0,0];
-            self.model.board[3] = [1,1,0,0,1,1];
-            self.model.board[4] = [1,0,0,0,1,1];
-            self.model.board[5] = [1,1,1,1,1,1];
-            for (y = 0; y < Game.board.rows; y++) {
-                for (x = 0; x < Game.board.cols; x++) {
-                    if (self.model.board[y][x] === 0)
-                        self.squares[y][x].remove();
-                }
-            }
-            self.pieces.push(Crafty.e('Piece').piece(0, false).at(2, 0));
-            self.pieces.push(Crafty.e('Piece').piece(1, false).at(4, 0));
-            self.model.pieces = [{x:2, y:0}, {x:4, y:0}];
-            
-            self.model.turn = 0;
-            self.model.step = 'move';
-            self.pieces[0].startPulse();
-        }, 2000);
-*/
-/*
-        self.model.board[0] = [1,1,1,1,1,1];
-        self.model.board[1] = [1,1,1,0,1,1];
-        self.model.board[2] = [0,0,0,0,0,1];
-        self.model.board[3] = [1,1,0,1,0,0];
-        self.model.board[4] = [2,1,0,2,0,1];
-        self.model.board[5] = [1,0,0,1,1,1];
-        for (y = 0; y < Game.board.rows; y++) {
-            for (x = 0; x < Game.board.cols; x++) {
-                if (self.model.board[y][x] === 0)
-                    self.squares[y][x].remove();
-            }
-        }
-        self.pieces.push(Crafty.e('Piece').piece(0, false).at(0, 4));
-        self.pieces.push(Crafty.e('Piece').piece(1, false).at(3, 4));
-        self.model.pieces = [{x:0, y:4}, {x:3, y:4}];
-*/
-/*
-        self.model.board[0] = [1,1,1,1,1,1];
-        self.model.board[1] = [1,1,1,1,1,1];
-        self.model.board[2] = [2,1,1,1,1,1];
-        self.model.board[3] = [1,1,1,1,2,1];
-        self.model.board[4] = [1,1,1,1,1,1];
-        self.model.board[5] = [1,1,1,1,1,1];
-        for (y = 0; y < Game.board.rows; y++) {
-            for (x = 0; x < Game.board.cols; x++) {
-                if (self.model.board[y][x] === 0)
-                    self.squares[y][x].remove();
-            }
-        }
-        self.pieces.push(Crafty.e('Piece').piece(0, false).at(0, 2));
-        self.pieces.push(Crafty.e('Piece').piece(1, false).at(4, 3));
-        self.model.pieces = [{x:0, y:2}, {x:4, y:3}];
-
-        self.model.turn = 0;
-        self.model.step = 'move';
-        self.pieces[1].startPulse();
-*/
-        // end init
 
         if (self.players[self.model.turn].type === 'ai') {
             aiTurn();
@@ -90,8 +29,10 @@ Crafty.scene('Game', function() {
     }
 
     function drawBoard() {
+        var x, y;
+
         // destroy all previously components created (if exist)
-        Crafty("Board").each(function(i) {
+        Crafty("Board").each(function() {
             this.destroy();
         });
 
@@ -159,7 +100,7 @@ Crafty.scene('Game', function() {
                 break;
             }
             if (!_.isObject(best)) {
-                best = self.model.getRandomSquare(self.model.turn);
+                best = self.model.getRandomSquare(self.model.turn, true);
                 //console.log('NO BEST remove found, get a random square instead', best);
             }
             break;
@@ -235,29 +176,39 @@ Crafty.scene('Game', function() {
                 }
             }
             else if (self.model.getPieceNbNeighbors(1) === 0) {
+                Game.gameover = {
+                    winner: self.startPlayer,
+                    msgs: []
+                };
                 if (msgs.length === 2) {
-                    msgs[0] = 'You wins';
-                    msgs[1] = 'You loses';
+                    msgs[self.startPlayer] = 'You win';
+                    msgs[self.startPlayer^1] = 'You lose';
+                    Game.gameover.msgs = msgs;
                 }
                 else {
-                    msgs[0] = self.players[0].type === 'human' ? 'You' : 'AI';
-                    msgs[0] += ' wins';
+                    msgs[0] = self.players[0].type === 'human' ? 'You win' : 'AI wins';
+                    Game.gameover.msgs[0] = self.players[0].type === 'human' ? 'You win' : 'You lose';
                 }
             }
             else {
+                Game.gameover = {
+                    winner: self.startPlayer^1,
+                    msgs: []
+                };
                 if (msgs.length === 2) {
-                    msgs[0] = 'You loses';
-                    msgs[1] = 'You wins';
+                    msgs[self.startPlayer] = 'You lose';
+                    msgs[self.startPlayer^1] = 'You win';
+                    Game.gameover.msgs = msgs;
                 }
                 else {
-                    msgs[0] = self.players[1].type === 'human' ? 'You' : 'AI';
-                    msgs[0] += ' wins';
+                    msgs[0] = self.players[1].type === 'human' ? 'You win' : 'AI wins';
+                    Game.gameover.msgs[0] = self.players[1].type === 'human' ? 'You win' : 'You lose';
                 }
             }
             break;
         }
 
-        y = (window.innerHeight - Game.board.size - $('header').height() - $('footer').height() - 3) / 4;
+        y = (window.innerHeight - Game.board.size - $('header').outerHeight() - $('footer').outerHeight()) / 4;
         if (msgs.length === 2) {
             $.each(self.messages, function(i, $message) {
                 $message.css(i === 0 ? 'top' : 'bottom', y + 'px');
@@ -291,33 +242,45 @@ Crafty.scene('Game', function() {
             self.messages[1].children(':first').hide();
             self.messages[1].children(':last').text('');
         }
+
+        if (Game.gameover !== null) {
+            setTimeout(function() {
+                Crafty.scene('Gameover');
+            }, 1000);
+        }
     }
     
-    this.squareSelected = this.bind('SquareSelected', function(data) {
+    this.uniqueBind('SquareSelected', function(data) {
         var turn = self.model.turn;
         var piece;
         var square = data.square;
         var source = data.source;
         var squareAt = square.at();
+        var rotated;
 
-        if (self.players[turn].type === 'ai' && source == 'human') {
+        if (self.players[turn].type === 'ai' && source === 'human') {
             return;
         }
                                     
         switch(self.model.step) {
         case 'start':
-            var rotated = self.players[0].type === 'human' && self.players[1].type === 'human' && turn === 1 ? true : false;
             if (self.model.placePiece(squareAt.x, squareAt.y)) {
+                if (self.players[0].type === 'human' && self.players[1].type === 'human') {
+                    rotated = self.startPlayer === turn ? false : true;
+                }
+                else {
+                    rotated = false;
+                }
                 piece = Crafty.e('Piece')
-                    .piece(self.startPlayer === 0 ? turn : turn^1, rotated)
+                    .piece(self.startPlayer === turn ? 0 : 1, rotated)
                     .at(squareAt.x, squareAt.y)
                     .bind("TweenEnd", displayPlayerInstruction);
                 self.pieces.push(piece);
                 if (turn === 1) {
                     self.pieces[0].startPulse();
                     // 2 pieces are placed, remove edges overshadow
-                    for (y = 0; y < Game.board.rows; y++) {
-                        for (x = 0; x < Game.board.cols; x++) {
+                    for (var y = 0; y < Game.board.rows; y++) {
+                        for (var x = 0; x < Game.board.cols; x++) {
                             if (x === 0 || y === 0 || x === Game.board.cols - 1 || y === Game.board.rows - 1) {
                                 self.squares[y][x].overshadow(false);
                             }
@@ -361,8 +324,98 @@ Crafty.scene('Game', function() {
         }
     });
 
-    $('#btn-new-game').on('click', newGame);
     newGame();
+}, function() {this.unbind('SquareSelected');});
+
+
+Crafty.scene('Gameover', function() {
+    if (Game.gameover.msgs.length === 1) {
+        Crafty.e('2D, DOM, Text')
+            .attr({
+                x: 0,
+                y: Game.board.size / 2 - 24,
+                w: Game.board.size
+            })
+            .text(Game.gameover.msgs[0])
+            .textColor('#FFFFFF')
+            .textFont({size: '48px', weight: 'bold'})
+            .css({'text-align': 'center'});
+    }
+    else {
+        Crafty.e('2D, DOM, Text')
+            .attr({
+                x: 0,
+                y: Game.board.size / 2 - 96,
+                w: Game.board.size
+            })
+            .text(Game.gameover.msgs[0])
+            .textColor('#FFFFFF')
+            .textFont({size: '48px', weight: 'bold'})
+            .css({'text-align': 'center'});
+        Crafty.e('2D, DOM, Text')
+            .attr({
+                x: 0,
+                y: Game.board.size / 2 + 96,
+                w: Game.board.size,
+                _flipY: true,
+                _flipX: true
+            })
+            .text(Game.gameover.msgs[1])
+            .textColor('#FFFFFF')
+            .textFont({size: '48px', weight: 'bold'})
+            .css({'text-align': 'center'});
+    }
+
+    var box = {
+        topleft: {
+            x: -Game.board.cellSize,
+            y: -Crafty.viewport.y - Game.board.cellSize + $('header').outerHeight()
+        },
+        bottomright: {
+            x: Crafty.viewport.width,
+            y: Crafty.viewport.height - Crafty.viewport.y - $('footer').outerHeight()
+        }
+    };
+
+    for (var i = 0; i < Game.board.rows * 2; i++) {
+        Crafty.e('Piece')
+            .piece(Game.gameover.winner, false)
+            .origin('center')
+            .attr({
+                // random position, rotation and speed
+                x: Crafty.math.randomInt(box.topleft.x, box.bottomright.x),
+                y: Crafty.math.randomInt(box.topleft.y, box.bottomright.y),
+                xspeed: Crafty.math.randomInt(-5, 5),
+                yspeed: Crafty.math.randomInt(-5, 5),
+                rspeed: Crafty.math.randomInt(-5, 5),
+                frameLimit: 1000
+            })
+            .bind("EnterFrame", function() {
+                this.frameLimit--;
+                if (this.frameLimit < 0) {
+                    return false;
+                }
+                var x = this._x + this.xspeed;
+                var y = this._y + this.yspeed;
+                var rotation = this._rotation + this.rspeed;
+
+                if (x > box.bottomright.x) {
+                    x = box.topleft.x;
+                }
+                if (x < box.topleft.x) {
+                    x = box.bottomright.x;
+                }
+                if (y > box.bottomright.y) {
+                    y =  box.topleft.y;
+                }
+                if (y < box.topleft.y) {
+                    y = box.bottomright.y;
+                }
+                this.attr({
+                    x: x, y: y, rotation: rotation
+                });
+            });
+    }
 });
 
 
