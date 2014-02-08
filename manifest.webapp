@@ -1,0 +1,16 @@
+{
+  "name": "Isolmoa",
+  "description": "A two-player abstract strategy board game",
+  "launch_path": "/index.html",
+  "fullscreen": false,
+  "icons": {
+    "128": "/img/shortcut-icon-128.png"
+  },
+  "developer": {
+    "name": "Valéry Febvre",
+    "url": "https://github.com/valos/Isolmoa"
+  },
+  "default_locale": "en",
+  "orientation": ["portrait-primary"],
+  "version": "1.0"
+}
