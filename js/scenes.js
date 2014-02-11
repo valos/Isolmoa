@@ -10,6 +10,8 @@ Crafty.scene('Game', function() {
 
     function newGame() {
         Game.gameover = null;
+        Game.readLaunchOptions();
+
         audioplay("new_game");
 
         drawBoard();
@@ -101,7 +103,6 @@ Crafty.scene('Game', function() {
             }
             if (!_.isObject(best)) {
                 best = self.model.getRandomSquare(self.model.turn, true);
-                //console.log('NO BEST remove found, get a random square instead', best);
             }
             break;
         }
@@ -420,13 +421,7 @@ Crafty.scene('Gameover', function() {
 
 
 Crafty.scene('Loading', function() {
-    Crafty.audio.add('new_game', ['sfx/new_game.mp3', 'sfx/new_game.ogg', 'sfx/new_game.wav']);
-    Crafty.audio.add('move', ['sfx/move.mp3', 'sfx/move.ogg', 'sfx/move.wav']);
-    Crafty.audio.add('remove', ['sfx/remove.mp3', 'sfx/remove.ogg', 'sfx/remove.wav']);
-    Crafty.audio.add('win', ['sfx/win.mp3', 'sfx/win.ogg', 'sfx/win.wav']);
-
-    // Draw some text for the player to see in case the file
-    // takes a noticeable amount of time to load
+    // Draw some text for the player to see in case files take a noticeable amount of time to load
     Crafty.e('2D, DOM, Text')
         .attr({
             x: 0,
@@ -437,8 +432,14 @@ Crafty.scene('Loading', function() {
         .textColor('#FFFFFF')
         .textFont({size: '24px', weight: 'bold'})
         .css({'text-align': 'center'});
+
+    // Load sounds
+    Crafty.audio.add('new_game', ['sfx/new_game.mp3', 'sfx/new_game.ogg', 'sfx/new_game.wav']);
+    Crafty.audio.add('move', ['sfx/move.mp3', 'sfx/move.ogg', 'sfx/move.wav']);
+    Crafty.audio.add('remove', ['sfx/remove.mp3', 'sfx/remove.ogg', 'sfx/remove.wav']);
+    Crafty.audio.add('win', ['sfx/win.mp3', 'sfx/win.ogg', 'sfx/win.wav']);
     
-    // Load our sprite map image
+    // Load sprite images
     Crafty.load(['img/sprite-cell.png', 'img/sprite-pieces.png'], function() {
         // Once the image is loaded...
         Crafty.sprite(53, 'img/sprite-cell.png', {

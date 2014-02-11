@@ -15,7 +15,8 @@ var Game = {
 
     animatePage: new AnimatePage(),
 
-    readOptions: function() {
+    // Read options when a new game is launched
+    readLaunchOptions: function() {
         var option;
 
         // board size
@@ -42,25 +43,29 @@ var Game = {
             level: option[1]
         };
 
-        // sound FX on/off
-        option = $('input[name=sound-fx]:checked').val();
-        this.sound = option === 'on' ? true : false;
+        this.readInGameOptions();
 
         // compute cells size
         this.board.cellSize = this.board.size / Math.max(this.board.rows, this.board.cols);
+    },
+
+    // Options that can be changed during the game
+    readInGameOptions: function() {
+        var option;
+
+        // sound FX on/off
+        option = $('input[name=sound-fx]:checked').val();
+        this.sound = option === 'on' ? true : false;
     },
 
     // Initialize and start game
     start: function() {
         Game.board.size = Math.min(window.innerHeight, window.innerWidth);
 
-        Game.readOptions();
+        //Game.readOptions();
         $('#options form').sisyphus({
             onSave: function () {
-                Game.readOptions();
-            },
-            onRestore: function () {
-                Game.readOptions();
+                Game.readInGameOptions();
             }
         });
 
@@ -75,28 +80,27 @@ var Game = {
 
         $('.btn-page').on('click', function(e) {
             e.preventDefault();
-            e.stopImmediatePropagation();
+            e.stopPropagation();
 
             var page = $(this).data('page');
+            var onEndCallback = function() {
+                if (page === 'board') {
+                    $('#btn-new-game').show();
+                }
+            };
 
             if (Game.animatePage.current === 'board') {
+                $('#btn-new-game').hide();
                 Game.animatePage.animate(page, 54);
             }
             else if (Game.animatePage.current === 'rules' && page === 'options') {
                 Game.animatePage.animate(page, 54);
             }
             else if (Game.animatePage.current === 'rules' && page === 'board') {
-                Game.animatePage.animate(page, 55);
+                Game.animatePage.animate(page, 55, onEndCallback);
             }
             else if (Game.animatePage.current === 'options') {
-                Game.animatePage.animate(page, 55);
-            }
-
-            if (page === 'board') {
-                $('#btn-new-game').show();
-            }
-            else {
-                $('#btn-new-game').hide();
+                Game.animatePage.animate(page, 55, onEndCallback);
             }
         });
 

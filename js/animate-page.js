@@ -23,7 +23,7 @@ function AnimatePage() {
     });
 }
 
-AnimatePage.prototype.animate = function(page, num) {
+AnimatePage.prototype.animate = function(page, num, onEndCallback) {
     if (this.isAnimating || this.current === page) {
         return false;
     }
@@ -310,14 +310,14 @@ AnimatePage.prototype.animate = function(page, num) {
     }
 
     if (!this.support) {
-        this.onEndAnimation($currPage, $nextPage);
+        this.onEndAnimation($currPage, $nextPage, onEndCallback);
     }
     else {
         $currPage.addClass(outClass).on(this.animEndEventName, function() {
             $currPage.off(self.animEndEventName);
             self.endCurrPage = true;
             if (self.endNextPage) {
-                self.onEndAnimation($currPage, $nextPage);
+                self.onEndAnimation($currPage, $nextPage, onEndCallback);
             }
         });
 
@@ -325,17 +325,20 @@ AnimatePage.prototype.animate = function(page, num) {
             $nextPage.off(self.animEndEventName);
             self.endNextPage = true;
             if (self.endCurrPage) {
-                self.onEndAnimation($currPage, $nextPage);
+                self.onEndAnimation($currPage, $nextPage, onEndCallback);
             }
         });
     }
 };
 
-AnimatePage.prototype.onEndAnimation = function($outpage, $inpage) {
+AnimatePage.prototype.onEndAnimation = function($outpage, $inpage, onEndCallback) {
     this.endCurrPage = false;
     this.endNextPage = false;
     this.resetPage($outpage, $inpage);
     this.isAnimating = false;
+    if (onEndCallback) {
+        onEndCallback();
+    }
 };
 
 AnimatePage.prototype.resetPage = function($outpage, $inpage) {
