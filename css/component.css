@@ -49,7 +49,8 @@
 }
 
 #board {
-    background: #0377BA; /*#0072BC;*/ /*#00BFF3;*/ /*#4DD2F7;*/
+    background: linear-gradient(rgba(0, 191, 243, 1), rgba(141, 198, 63, 1));
+    background: -webkit-linear-gradient(rgba(0, 191, 243, 1), rgba(141, 198, 63, 1));
 }
 
 #rules {

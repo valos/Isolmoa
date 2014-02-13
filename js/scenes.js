@@ -8,14 +8,14 @@ Crafty.scene('Game', function() {
     this.messages = [$('#message-0'), $('#message-1')];
     this.aiTurnTimeout = null;
 
-    function newGame() {
+    function init() {
         Game.gameover = null;
         Game.readLaunchOptions();
 
         audioplay("new_game");
 
         drawBoard();
-        self.model.newGame(Game.board.rows, Game.board.cols);
+        self.model.init(Game.board.rows, Game.board.cols);
 
         self.startPlayer = Game.startPlayer !== 'random' ? Game.startPlayer : Math.floor(Math.random() * 2);
         self.players = [
@@ -40,6 +40,8 @@ Crafty.scene('Game', function() {
 
         self.pieces = [];
         self.squares = [];
+
+        Crafty.e('Background');
 
         // draw board (holes + squares components)
         for (y = 0; y < Game.board.rows; y++) {
@@ -325,11 +327,13 @@ Crafty.scene('Game', function() {
         }
     });
 
-    newGame();
+    init();
 }, function() {this.unbind('SquareSelected');});
 
 
 Crafty.scene('Gameover', function() {
+    Crafty.e('Background');
+
     if (Game.gameover.msgs.length === 1) {
         Crafty.e('2D, DOM, Text')
             .attr({
@@ -438,10 +442,13 @@ Crafty.scene('Loading', function() {
     Crafty.audio.add('move', ['sfx/move.mp3', 'sfx/move.ogg', 'sfx/move.wav']);
     Crafty.audio.add('remove', ['sfx/remove.mp3', 'sfx/remove.ogg', 'sfx/remove.wav']);
     Crafty.audio.add('win', ['sfx/win.mp3', 'sfx/win.ogg', 'sfx/win.wav']);
-    
-    // Load sprite images
-    Crafty.load(['img/sprite-cell.png', 'img/sprite-pieces.png'], function() {
-        // Once the image is loaded...
+
+    // Load sprites images
+    Crafty.load(['img/background.png', 'img/sprite-cell.png', 'img/sprite-pieces.png'], function() {
+        // Once images are loaded...
+        Crafty.sprite(1, 640, 'img/background.png', {
+            BackgroundSprite: [0, 0]
+        });
         Crafty.sprite(53, 'img/sprite-cell.png', {
             holeSprite: [0, 0],
             squareSprite: [1, 0]

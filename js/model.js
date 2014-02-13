@@ -7,7 +7,7 @@ function Model() {
     this.pieces = [];
 }
 
-Model.prototype.newGame = function(rows, cols) {
+Model.prototype.init = function(rows, cols) {
     this.turn = 0;
     this.step = 'start';
     this.board.init(rows, cols);

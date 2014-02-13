@@ -1,3 +1,14 @@
+Crafty.c('Background', {
+    init: function() {
+        this.requires('2D, Canvas, BackgroundSprite, Solid')
+            .attr({
+                y: -Crafty.viewport.y,
+                w: Crafty.DOM.window.width,
+                h: Crafty.DOM.window.height
+            });
+    }
+});
+
 Crafty.c('Board', {
     init: function() {
         this.attr({
