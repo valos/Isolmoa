@@ -1,7 +1,7 @@
 {
   "name": "Isolmoa",
   "description": "A two-player abstract strategy board game",
-  "launch_path": "/isolmoa/index.html",
+  "launch_path": "/Isolmoa/index.html",
   "fullscreen": false,
   "icons": {
     "128": "/img/shortcut-icon-128.png"
