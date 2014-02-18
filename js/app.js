@@ -69,8 +69,6 @@ var Game = {
             }
         });
 
-        FastClick.attach(document.body);
-
         $('#btn-new-game').on('click', function(e) {
             e.preventDefault();
             e.stopImmediatePropagation();
