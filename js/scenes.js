@@ -214,11 +214,10 @@ Crafty.scene('Game', function() {
         y = (window.innerHeight - Game.board.size - $('header').outerHeight() - $('footer').outerHeight()) / 4;
         if (msgs.length === 2) {
             $.each(self.messages, function(i, $message) {
-                $message.css(i === 0 ? 'top' : 'bottom', y + 'px');
+                $message.css(i === 0 ? 'top' : 'bottom', y + 'px').show();
                 $message.children(':last')
                     .css('color', '#fff')
                     .text(msgs[i]);
-                $message.children(':first').show();
                 $message.children(':first').css('background-position', (i === 0 ? 0 : -106) + 'px 0');
                 if (i === id) {
                     $message.children(':last')
@@ -230,10 +229,8 @@ Crafty.scene('Game', function() {
             });
         }
         else {
-            self.messages[0]
-                .css('top', y + 'px');
+            self.messages[0].css('top', y + 'px').show();
             self.messages[0].children(':first')
-                .show()
                 .css('background-position', (self.model.turn === self.startPlayer ? 0 : -106) + 'px 0');
             self.messages[0].children(':last')
                 .css('color', '#fff')
@@ -242,14 +239,16 @@ Crafty.scene('Game', function() {
                 .one('webkitAnimationEnd animationend', function() {
                     $(this).removeClass();
                 });
-            self.messages[1].children(':first').hide();
+            self.messages[1].hide();
             self.messages[1].children(':last').text('');
         }
 
         if (Game.gameover !== null) {
             setTimeout(function() {
+                self.messages[0].hide();
+                self.messages[1].hide();
                 Crafty.scene('Gameover');
-            }, 1000);
+            }, 2000);
         }
     }
     
@@ -371,6 +370,7 @@ Crafty.scene('Gameover', function() {
             .css({'text-align': 'center'});
     }
 
+    var p;
     var box = {
         topleft: {
             x: -Game.board.cellSize,
@@ -383,9 +383,12 @@ Crafty.scene('Gameover', function() {
     };
 
     for (var i = 0; i < Game.board.rows * 2; i++) {
-        Crafty.e('Piece')
-            .piece(Game.gameover.winner, false)
-            .origin('center')
+        p = Crafty.e('Piece')
+            .piece(i < Game.board.rows ? Game.gameover.winner : Game.gameover.winner^1, false);
+        if (i >= Game.board.rows) {
+            p.loose();
+        }
+        p.origin('center')
             .attr({
                 // random position, rotation and speed
                 x: Crafty.math.randomInt(box.topleft.x, box.bottomright.x),
