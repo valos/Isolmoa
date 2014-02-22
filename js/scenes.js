@@ -370,8 +370,8 @@ Crafty.scene('Gameover', function() {
             .css({'text-align': 'center'});
     }
 
-    var p;
-    var box = {
+    var p, boundaries;
+    var boundariesOriginCenter = {
         topleft: {
             x: -Game.board.cellSize,
             y: -Crafty.viewport.y - Game.board.cellSize + $('header').outerHeight()
@@ -381,48 +381,63 @@ Crafty.scene('Gameover', function() {
             y: Crafty.viewport.height - Crafty.viewport.y - $('footer').outerHeight()
         }
     };
+    var boundariesOriginTopLeft ={
+        topleft: {
+            x: boundariesOriginCenter.topleft.x,
+            y: boundariesOriginCenter.topleft.y,
+        },
+        bottomright: {
+            x: boundariesOriginCenter.bottomright.x + Game.board.cellSize,
+            y: boundariesOriginCenter.bottomright.y + Game.board.cellSize
+        }
+    };
 
     for (var i = 0; i < Game.board.rows * 2; i++) {
         p = Crafty.e('Piece')
             .piece(i < Game.board.rows ? Game.gameover.winner : Game.gameover.winner^1, false);
         if (i >= Game.board.rows) {
+            boundaries = boundariesOriginCenter;
+            p.origin('center');
             p.loose();
         }
-        p.origin('center')
-            .attr({
-                // random position, rotation and speed
-                x: Crafty.math.randomInt(box.topleft.x, box.bottomright.x),
-                y: Crafty.math.randomInt(box.topleft.y, box.bottomright.y),
-                xspeed: Crafty.math.randomInt(-5, 5),
-                yspeed: Crafty.math.randomInt(-5, 5),
-                rspeed: Crafty.math.randomInt(-5, 5),
-                frameLimit: 1000
-            })
-            .bind("EnterFrame", function() {
-                this.frameLimit--;
-                if (this.frameLimit < 0) {
-                    return false;
-                }
-                var x = this._x + this.xspeed;
-                var y = this._y + this.yspeed;
-                var rotation = this._rotation + this.rspeed;
+        else {
+            boundaries = boundariesOriginTopLeft;
+        }
+        p.attr({
+            // random position, rotation and speed
+            x: Crafty.math.randomInt(boundaries.topleft.x, boundaries.bottomright.x),
+            y: Crafty.math.randomInt(boundaries.topleft.y, boundaries.bottomright.y),
+            xspeed: Crafty.math.randomInt(-5, 5),
+            yspeed: Crafty.math.randomInt(-5, 5),
+            rspeed: Math.random() < 0.5 ? -5 : 5,
+            boundaries: boundaries,
+            frameLimit: 1000
+        });
+        p.bind("EnterFrame", function() {
+            this.frameLimit--;
+            if (this.frameLimit < 0) {
+                return false;
+            }
+            var x = this._x + this.xspeed;
+            var y = this._y + this.yspeed;
+            var rotation = this._rotation + this.rspeed;
 
-                if (x > box.bottomright.x) {
-                    x = box.topleft.x;
-                }
-                if (x < box.topleft.x) {
-                    x = box.bottomright.x;
-                }
-                if (y > box.bottomright.y) {
-                    y =  box.topleft.y;
-                }
-                if (y < box.topleft.y) {
-                    y = box.bottomright.y;
-                }
-                this.attr({
-                    x: x, y: y, rotation: rotation
-                });
+            if (x > this.boundaries.bottomright.x) {
+                x = this.boundaries.topleft.x;
+            }
+            if (x < this.boundaries.topleft.x) {
+                x = this.boundaries.bottomright.x;
+            }
+            if (y > this.boundaries.bottomright.y) {
+                y =  this.boundaries.topleft.y;
+            }
+            if (y < this.boundaries.topleft.y) {
+                y = this.boundaries.bottomright.y;
+            }
+            this.attr({
+                x: x, y: y, rotation: rotation
             });
+        });
     }
 });
 
