@@ -370,7 +370,7 @@ Crafty.scene('Gameover', function() {
             .css({'text-align': 'center'});
     }
 
-    var p, boundaries;
+    var nbPieces = 8, p, boundaries;
     var boundariesOriginCenter = {
         topleft: {
             x: -Game.board.cellSize,
@@ -392,10 +392,10 @@ Crafty.scene('Gameover', function() {
         }
     };
 
-    for (var i = 0; i < Game.board.rows * 2; i++) {
+    for (var i = 0; i < nbPieces; i++) {
         p = Crafty.e('Piece')
-            .piece(i < Game.board.rows ? Game.gameover.winner : Game.gameover.winner^1, false);
-        if (i >= Game.board.rows) {
+            .piece(i < nbPieces / 2 ? Game.gameover.winner : Game.gameover.winner^1, false);
+        if (i >= nbPieces / 2) {
             boundaries = boundariesOriginCenter;
             p.origin('center');
             p.loose();
@@ -409,7 +409,7 @@ Crafty.scene('Gameover', function() {
             y: Crafty.math.randomInt(boundaries.topleft.y, boundaries.bottomright.y),
             xspeed: Crafty.math.randomInt(-5, 5),
             yspeed: Crafty.math.randomInt(-5, 5),
-            rspeed: Math.random() < 0.5 ? -5 : 5,
+            rspeed: Crafty.math.randomInt(4, 6) * (Math.random() < 0.5 ? -1 : 1),
             boundaries: boundaries,
             frameLimit: 1000
         });
