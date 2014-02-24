@@ -6,7 +6,8 @@
     <meta name="author" content="Valéry Febvre">
     <meta name="copyright" content="&copy; 2013-2014 Valéry Febvre">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -19,25 +20,25 @@
     <link rel="stylesheet" href="css/default.css">
     <link rel="stylesheet" href="css/component.css">
     <link rel="stylesheet" href="css/animate-page.css">
-    <link rel="stylesheet" href="lib/animate.css">
 
+    <link rel="stylesheet" href="lib/animate.css">
     <link rel="stylesheet" href="lib/toggle-switch.css">
+
     <script src="lib/modernizr.custom.js"></script>
-    <script src="lib/fastclick.js"></script>
     <script src="lib/iscroll-lite.js"></script>
   </head>
   <body>
 
     <header>
-      <span id="btn-new-game" style="position:absolute; right:0">New Game</span>
+      <span id="btn-new-game">New Game</span>
       <h2>Isolmoa</h2>
     </header>
     
     <div id="main" class="perspective">
 
       <div class="page pt-page-current" id="board">
-        <div id="message-0"><span class="piece" style="display:none"></span><div></div></div>
-        <div id="message-1"><span class="piece" style="display:none"></span><div></div></div>
+        <div id="message-0" style="display:none"><span class="piece"></span><div></div></div>
+        <div id="message-1" style="display:none"><span class="piece"></span><div></div></div>
       </div>
 
       <div class="page" id="rules"><div class="scroller">
