@@ -163,6 +163,7 @@ function installMe() {
                 button.style.display = "none";
             }
             else {
+                button.style.display = "";
                 button.addEventListener('click', installFirefoxOS, false);
             }
         };
