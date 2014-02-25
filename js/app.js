@@ -62,7 +62,9 @@ var Game = {
     start: function() {
         Game.board.size = Math.min(window.innerHeight, window.innerWidth);
 
-        //Game.readOptions();
+        // display or not a button to install site as an app
+        installMe();
+
         $('#options form').sisyphus({
             onSave: function () {
                 Game.readInGameOptions();
@@ -129,6 +131,43 @@ var Game = {
         Crafty.scene('Loading');
     }
 };
+
+function installMe() {
+    var manifestUrl = location.href + 'manifest.webapp';
+    var button = document.getElementById('btn-install');
+    var installCheck;
+
+    function installFirefoxOS(event) {
+        event.preventDefault();
+
+        var installLocFind = navigator.mozApps.install(manifestUrl);
+        installLocFind.onsuccess = function(data) {
+            // App is installed, do something
+        };
+        installLocFind.onerror = function() {
+            // App wasn't installed
+            alert(installLocFind.error.name);
+        };
+    }
+
+    if (navigator.mozApps) {
+        try {
+            installCheck = navigator.mozApps.checkInstalled(manifestUrl);
+        }
+        catch (err) {
+            return;
+        }
+
+        installCheck.onsuccess = function() {
+            if (installCheck.result) {
+                button.style.display = "none";
+            }
+            else {
+                button.addEventListener('click', installFirefoxOS, false);
+            }
+        };
+    }    
+}
 
 //document.addEventListener('DOMContentLoaded', Game.start, true);
 window.addEventListener('load', Game.start, false);
