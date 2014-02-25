@@ -11,6 +11,6 @@
     "url": "https://github.com/valos/Isolmoa"
   },
   "default_locale": "en",
-  "orientation": ["portrait-primary"],
+  "orientation": ["portrait"],
   "version": "1.0"
 }
