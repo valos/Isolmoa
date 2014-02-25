@@ -89,21 +89,27 @@ header {
     color: #fff;
     border-bottom: 1px solid #9E0B0F; /*#39B54A;*/ /*#F3F4F3;*/
 }
-
 header > h2 {
     text-align: center;
     margin: 0;
 }
 header > span {
     position: absolute;
-    right: 0;
     font-size: 0.5em;
     margin: 6px 0 0 0;
     padding: 2px 10px;
     color: #fff;
-    background: orange;
     line-height: 21px;
     cursor: pointer;
+}
+header #btn-install {
+    background: #8DC63F;
+    color: #fff;
+    left: 0;
+}
+header #btn-new-game {
+    background: orange;
+    right: 0;
 }
 
 footer {
@@ -118,7 +124,6 @@ footer {
     background: #ED1C24; /* #F9FAF9;*/
     border-top: 1px solid #9E0B0F; /* #F3F4F3;*/
 }
-
 footer ul#nav {
     list-style: none;
     margin: 0;
@@ -126,11 +131,9 @@ footer ul#nav {
     width: 100%;
     overflow: auto;
 }
-
 footer ul#nav li {
     display: inline;
 }
-
 footer ul#nav li span {
     text-decoration: none;
     display: block;
