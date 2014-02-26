@@ -4,6 +4,7 @@
   "launch_path": "/Isolmoa/index.html",
   "fullscreen": "false",
   "icons": {
+    "60": "/Isolmoa/img/shortcut-icon-60.png"
     "128": "/Isolmoa/img/shortcut-icon-128.png"
   },
   "developer": {
@@ -11,6 +12,6 @@
     "url": "https://github.com/valos/Isolmoa"
   },
   "default_locale": "en",
-  "orientation": ["portrait"],
+  "orientation": ["portrait-primary"],
   "version": "1.0"
 }
