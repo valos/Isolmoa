@@ -418,25 +418,23 @@ Crafty.scene('Gameover', function() {
             if (this.frameLimit < 0) {
                 return false;
             }
-            var x = this._x + this.xspeed;
-            var y = this._y + this.yspeed;
-            var rotation = this._rotation + this.rspeed;
 
-            if (x > this.boundaries.bottomright.x) {
-                x = this.boundaries.topleft.x;
+            this.x += this.xspeed;
+            this.y += this.yspeed;
+            this.rotation += this.rspeed;
+
+            if (this.x > this.boundaries.bottomright.x) {
+                this.x = this.boundaries.topleft.x;
             }
-            if (x < this.boundaries.topleft.x) {
-                x = this.boundaries.bottomright.x;
+            if (this.x < this.boundaries.topleft.x) {
+                this.x = this.boundaries.bottomright.x;
             }
-            if (y > this.boundaries.bottomright.y) {
-                y =  this.boundaries.topleft.y;
+            if (this.y > this.boundaries.bottomright.y) {
+                this.y =  this.boundaries.topleft.y;
             }
-            if (y < this.boundaries.topleft.y) {
-                y = this.boundaries.bottomright.y;
+            if (this.y < this.boundaries.topleft.y) {
+                this.y = this.boundaries.bottomright.y;
             }
-            this.attr({
-                x: x, y: y, rotation: rotation
-            });
         });
     }
 });
