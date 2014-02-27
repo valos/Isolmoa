@@ -66,7 +66,7 @@ Crafty.c('Square', {
                 w: 0,
                 h: 0
             })
-            .bind('Click', this._onclick);
+            .bind('MouseDown', this._onclick);
     },
 
     _onclick: function() {
