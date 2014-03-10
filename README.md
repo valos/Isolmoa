@@ -1,12 +1,15 @@
 Isolmoa
 =======
 
-A two-player abstract strategy board game based on [Isola](http://en.wikipedia.org/wiki/Isola_%28board_game%29) written in pure HTML5 (canvas, audio elements, data storage) + JavaScript (jQuery, Underscore, Sisyphus, Crafty).
+A two-player abstract strategy board game based on [Isola](http://en.wikipedia.org/wiki/Isola_%28board_game%29) written in pure HTML5 (canvas, audio elements, data storage) + JavaScript ([jQuery](http://jquery.com/), [Underscore](http://underscorejs.org/), [Sisyphus](http://sisyphus-js.herokuapp.com/), [Crafty](http://craftyjs.com/)).
 
 It's a small project initially created to learn/play with some new HTML5 stuffs. Now, it is also a test case of HTML5 mobile app.
 
+[Try it](http://valos.github.io/Isolmoa/) on your mobile device.
+
 Rules
 -----
+
 The board initially contains squares.
 
 Each of the two players has one piece.
