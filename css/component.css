@@ -54,14 +54,25 @@
 }
 
 #rules {
-    background: #00A02A; /*#8DC63F;*/ /*#EC193A;*/ /*#52D98C;*/
-    padding: 45px 10px;
-    color: #fff;
+    background: #8DC63F; /*#00A02A;*/ /*#EC193A;*/ /*#52D98C;*/
+    padding: 48px 10px;
+    color: #333;
     overflow: auto;
 }
 #rules h3 {
+    margin: 0 10px 0 0px;
     text-align: center;
-    font-weight: bold;
+    color: #fff;
+    background: #60862B;
+}
+#rules h4 {
+    color: #fff;
+}
+#rules a {
+    text-decoration-style: dashed;
+    -moz-text-decoration-style: dashed;
+    -webkit-text-decoration-style: dashed;
+    color: #333;
 }
 
 #options {

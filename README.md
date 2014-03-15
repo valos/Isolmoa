@@ -21,3 +21,10 @@ Next, each turn of play is composed of two actions:
 - removing any square with no piece on it.
 
 The goal of the game is to block the opponent by destroying all the squares which surround him before being blocked yourself.
+
+Make a Donation
+---------------
+
+[![Flattr](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=valos&url=https://github.com/valos/Isolmoa) 
+
+[![BitCoin](https://raw.github.com/valos/Isolmoa/master/img/bitcoin.png)](bitcoin:1LbgYALbkQ2Trgh4yXqdBnbdQosGard5hd?label=Isolmoa&message=Donation%20to%20Isolmoa "Donate once-off to this project using BitCoin")
