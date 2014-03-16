@@ -54,24 +54,36 @@
 }
 
 #rules {
-    background: #00A02A; /*#8DC63F;*/ /*#EC193A;*/ /*#52D98C;*/
-    padding: 45px 10px;
-    color: #fff;
+    background: linear-gradient(rgba(30, 130, 241, 1), rgba(255, 253, 194, 1));
+    background: -webkit-linear-gradient(rgba(30, 130, 241, 1), rgba(255, 253, 194, 1));
+    padding: 48px 10px;
+    color: #333;
     overflow: auto;
 }
 #rules h3 {
+    margin: 0 10px 0 0px;
     text-align: center;
-    font-weight: bold;
+    color: #fff;
+    font-size: 140%;
+}
+#rules h3, #rules h4 {
+    font-weight: normal;
+}
+#rules a {
+    text-decoration-style: dashed;
+    -moz-text-decoration-style: dashed;
+    -webkit-text-decoration-style: dashed;
+    color: #333;
 }
 
 #options {
-    background: #875846;
+    background: linear-gradient(rgba(254, 213, 131, 1), rgba(244, 111, 20, 1));
+    background: -webkit-linear-gradient(rgba(254, 213, 131, 1), rgba(244, 111, 20, 1));
     padding: 40px 20px 10px 20px;
 }
 #options form > label {
     display: block;
     color: #fff;
-    font-weight: bold;
     margin: 10px 0;
     text-align: center;
 }
@@ -85,9 +97,9 @@ header {
     left: 0;
     margin: 0;
     padding: 0;
-    background: #ED1C24; /*#8DC63F;*/ /*#F9FAF9;*/
+    background: #ED1C24;
     color: #fff;
-    border-bottom: 1px solid #9E0B0F; /*#39B54A;*/ /*#F3F4F3;*/
+    border-bottom: 1px solid #9E0B0F;
 }
 header > h2 {
     text-align: center;
@@ -121,8 +133,8 @@ footer {
     left: 0;
     margin: 0;
     padding: 0;
-    background: #ED1C24; /* #F9FAF9;*/
-    border-top: 1px solid #9E0B0F; /* #F3F4F3;*/
+    background: #ED1C24;
+    border-top: 1px solid #9E0B0F;
 }
 footer ul#nav {
     list-style: none;
@@ -149,7 +161,7 @@ footer ul#nav li span {
     height: 34px !important;
 }
 .switch-isolmoa {
-    background-color: #BA8B4E;
+    background-color: #fff;
 }
 .switch-isolmoa.switch-isolmoa-gray a {
     background-color: #95A5A5;
@@ -161,7 +173,7 @@ footer ul#nav li span {
     background-color: #F53791;
 }
 .switch-isolmoa input:checked + label {
-    color: white;
+    color: #FED583;
 }
 
 #message-0, #message-1 {
@@ -170,7 +182,6 @@ footer ul#nav li span {
     z-index: 1000;
     font-size: 1.1em;
     text-align: center;
-    font-weight: bold;
     line-height: 0.2;
 }
 #message-1 {

@@ -13,6 +13,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 import android.os.Bundle;
 import org.valos.isolmoa.R;
 
@@ -61,7 +62,14 @@ public class IsolmoaActivity extends Activity {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            startActivity(i);
+            if (i.resolveActivity(getPackageManager()) != null) {
+                startActivity(i);
+            }
+            else {
+                Toast.makeText(IsolmoaActivity.this,
+                               "You don't have any available app that can handle " + i.getDataString(),
+                               Toast.LENGTH_LONG).show();
+            }
             return true;
         }
     }
