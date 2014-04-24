@@ -7,6 +7,8 @@ It's a small project initially created to learn/play with some new HTML5 stuffs.
 
 [Try it](http://valos.github.io/Isolmoa/) on your mobile device.
 
+Install it on your Android device via [F-Droid](https://f-droid.org/repository/browse/?fdid=org.valos.isolmoa) FOSS Android App Repository.
+
 Rules
 -----
 
