@@ -24,6 +24,7 @@
     -webkit-transform-style: preserve-3d;
     -moz-transform-style: preserve-3d;
     transform-style: preserve-3d;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 .scroller {
@@ -54,16 +55,16 @@
 }
 
 #rules {
-    background: linear-gradient(rgba(30, 130, 241, 1), rgba(255, 253, 194, 1));
-    background: -webkit-linear-gradient(rgba(30, 130, 241, 1), rgba(255, 253, 194, 1));
-    padding: 48px 10px;
-    color: #333;
+    background: linear-gradient(rgba(30, 130, 241, 1), rgba(100, 191, 243, 1));
+    background: -webkit-linear-gradient(rgba(30, 130, 241, 1), rgba(100, 191, 243, 1));
+    padding: 48px 10px 0px 10px;
+    color: #fff;
     overflow: auto;
 }
 #rules h3 {
     margin: 0 10px 0 0px;
     text-align: center;
-    color: #fff;
+    color: #333;
     font-size: 140%;
 }
 #rules h3, #rules h4 {
@@ -73,12 +74,12 @@
     text-decoration-style: dashed;
     -moz-text-decoration-style: dashed;
     -webkit-text-decoration-style: dashed;
-    color: #333;
+    color: #fff;
 }
 
 #options {
-    background: linear-gradient(rgba(254, 213, 131, 1), rgba(244, 111, 20, 1));
-    background: -webkit-linear-gradient(rgba(254, 213, 131, 1), rgba(244, 111, 20, 1));
+    background: linear-gradient(rgba(244, 111, 20, 1), rgba(254, 213, 131, 1));
+    background: -webkit-linear-gradient(rgba(244, 111, 20, 1), rgba(254, 213, 131, 1));
     padding: 40px 20px 10px 20px;
 }
 #options form > label {
@@ -104,6 +105,7 @@ header {
 header > h2 {
     text-align: center;
     margin: 0;
+    text-shadow: 2px 2px #111;
 }
 header > span {
     position: absolute;
@@ -147,13 +149,14 @@ footer ul#nav li {
     display: inline;
 }
 footer ul#nav li span {
-    text-decoration: none;
     display: block;
     width: 33.33%;
     color: #fff;
     line-height: 37px;
     float: left;
     text-align: center;
+    text-decoration: none;
+    text-shadow: 1px 1px #111;
     cursor: pointer;
 }
 

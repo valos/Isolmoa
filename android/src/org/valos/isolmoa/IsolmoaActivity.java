@@ -39,9 +39,6 @@ public class IsolmoaActivity extends Activity {
 
         mWebView.getSettings().setJavaScriptEnabled(true);
 
-        // Increase the priority of the rendering thread to high
-        mWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
-
         // Enable HTML5 local storage and make it persistent
         mWebView.getSettings().setDomStorageEnabled(true);
 

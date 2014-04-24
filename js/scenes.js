@@ -128,6 +128,9 @@ Crafty.scene('Game', function() {
         var y, effect, id, msgs = [];
 
         if (self.players[0].type === 'ai' && self.players[1].type === 'ai') {
+            $.each(self.messages, function(i, $message) {
+                $message.hide();
+            });
             return;
         }
         else if (self.players[0].type === 'human' && self.players[1].type === 'human') {
